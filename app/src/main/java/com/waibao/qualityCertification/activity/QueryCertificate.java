@@ -1,12 +1,16 @@
 package com.waibao.qualityCertification.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,12 +20,21 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.baidu.ocr.sdk.exception.OCRError;
+import com.baidu.ocr.sdk.model.GeneralResult;
 import com.waibao.qualityCertification.R;
 import com.waibao.qualityCertification.base.BaseActivity;
 import com.waibao.qualityCertification.base.BaseAsyTask;
+import com.waibao.qualityCertification.interfaceMy.PermissionListener;
+import com.waibao.qualityCertification.util.FileUtils;
 import com.waibao.qualityCertification.util.GridViewUtils;
+import com.waibao.qualityCertification.util.MipcaActivityCapture;
+import com.waibao.qualityCertification.util.OCRManagerUtil;
+import com.waibao.qualityCertification.util.ToastUtils;
 import com.waibao.qualityCertification.util.UiUtils;
+import com.waibao.qualityCertification.view.MyGridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,20 +42,33 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import static com.waibao.qualityCertification.constants.IntentConstants.OPEN_SCAN_QUERYCERITIFICATE;
+import static com.waibao.qualityCertification.constants.IntentConstants.RESULT_RECTANGLE_CAMERA;
 
 // 证书查询
 public class QueryCertificate extends BaseActivity {
     private Toolbar toolbar;
     private Spinner query_certificate_spinner;
     private GridView query_certificate_grid1;
-    private GridView query_certificate_grid2;
+    private MyGridView query_certificate_grid2;
+    private MyGridView query_certificate_grid3;
+    private MyGridView query_certificate_grid4;
     private LinearLayout query_certificate_linear;
     // 综合查询
     private ArrayList<String> mulQueryListData = new ArrayList<String>();
     // 条件查询
     private ArrayList<String> conListData = new ArrayList<String>();
+    private ArrayList<String> conListData3 = new ArrayList<String>();
+    private ArrayList<String> conListData4 = new ArrayList<String>();
     private ArrayAdapter<String> mulQueryListAdapter;
     private ArrayAdapter<String> conQueryListAdapter;
+    private ArrayAdapter<String> conQueryListAdapter3;
+    private ArrayAdapter<String> conQueryListAdapter4;
+    private TextView query_certificate_text2;
+    private TextView query_certificate_text3;
+    private TextView query_certificate_text4;
     private int position = 0;
     private String userToken = "";
     private String userSession = "";
@@ -50,8 +76,13 @@ public class QueryCertificate extends BaseActivity {
     private JSONArray tempJsonArray = null;
     private JSONObject tempJSONObject = null;
     private Button query_certificate_Btn;
+    private Button qr_code_query_certificate_Btn;
+    private Button img_ocr_query_certificate_Btn;
     private EditText query_certificate_num_Edt;
     private EditText query_certificate_unitID_Edt;
+    private String query_certificate_num_Str;
+    private String query_certificate_unitID_Str;
+    private String data_upload_ocr_ImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +95,18 @@ public class QueryCertificate extends BaseActivity {
     private void initView() {
         query_certificate_spinner = (Spinner) findViewById(R.id.query_certificate_spinner);
         query_certificate_grid1 = (GridView) findViewById(R.id.query_certificate_grid1);
-        query_certificate_grid2 = (GridView) findViewById(R.id.query_certificate_grid2);
+        query_certificate_grid2 = (MyGridView) findViewById(R.id.query_certificate_grid2);
+        query_certificate_grid3 = (MyGridView) findViewById(R.id.query_certificate_grid3);
+        query_certificate_grid4 = (MyGridView) findViewById(R.id.query_certificate_grid4);
         query_certificate_linear = (LinearLayout) findViewById(R.id.query_certificate_linear);
         query_certificate_Btn = (Button) findViewById(R.id.query_certificate_Btn);
+        qr_code_query_certificate_Btn = (Button) findViewById(R.id.qr_code_query_certificate_Btn);
+        img_ocr_query_certificate_Btn = (Button) findViewById(R.id.img_ocr_query_certificate_Btn);
         query_certificate_num_Edt = (EditText) findViewById(R.id.query_certificate_num_Edt);
         query_certificate_unitID_Edt = (EditText) findViewById(R.id.query_certificate_unitID_Edt);
+        query_certificate_text2 = (TextView) findViewById(R.id.query_certificate_text2);
+        query_certificate_text3 = (TextView) findViewById(R.id.query_certificate_text3);
+        query_certificate_text4 = (TextView) findViewById(R.id.query_certificate_text4);
         if (sharedPreference != null) {
             userSession = sharedPreference.getString("session", "");
         }
@@ -90,8 +128,28 @@ public class QueryCertificate extends BaseActivity {
                 return GridViewUtils.getView(QueryCertificate.this, view, conListData, position);
             }
         };
+        conQueryListAdapter3 = new ArrayAdapter<String>(QueryCertificate.this, android.R.layout.simple_list_item_1, conListData3) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                // Return the GridView current item as a View
+                View view = super.getView(position, convertView, parent);
+                return GridViewUtils.getView(QueryCertificate.this, view, conListData3, position);
+            }
+        };
+        conQueryListAdapter4 = new ArrayAdapter<String>(QueryCertificate.this, android.R.layout.simple_list_item_1, conListData4) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                // Return the GridView current item as a View
+                View view = super.getView(position, convertView, parent);
+                return GridViewUtils.getView(QueryCertificate.this, view, conListData4, position);
+            }
+        };
         query_certificate_grid1.setAdapter(mulQueryListAdapter);
         query_certificate_grid2.setAdapter(conQueryListAdapter);
+        query_certificate_grid3.setAdapter(conQueryListAdapter3);
+        query_certificate_grid4.setAdapter(conQueryListAdapter4);
         query_certificate_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -108,6 +166,23 @@ public class QueryCertificate extends BaseActivity {
 
             }
         });
+        query_certificate_text3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UiUtils.show("恭喜您，追溯成功。");
+                query_certificate_text3.setText("检测数据");
+                query_certificate_grid3.setVisibility(View.VISIBLE);
+                query_certificate_text4.setVisibility(View.VISIBLE);
+            }
+        });
+        query_certificate_text4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UiUtils.show("恭喜您，追溯成功。");
+                query_certificate_text4.setText("试运行数据");
+                query_certificate_grid4.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void initToolbar() {
@@ -122,6 +197,84 @@ public class QueryCertificate extends BaseActivity {
         temp.clear();
         for (int i = 0; i < parmas.length; ++i) {
             temp.add(parmas[i]);
+        }
+    }
+
+    public void openScan() {
+        //启动扫一扫
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString("TAG", "QueryCertificate");
+        intent.setClass(QueryCertificate.this, MipcaActivityCapture.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, OPEN_SCAN_QUERYCERITIFICATE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 1) {
+                Uri uri = data.getData();
+                data_upload_ocr_ImagePath = FileUtils.getPath(QueryCertificate.this, uri);
+                OCRManagerUtil.recognizeAccurateBasic(this, data_upload_ocr_ImagePath, new OCRManagerUtil.OCRCallBack<GeneralResult>() {
+                    @Override
+                    public void succeed(GeneralResult data) {
+                        // 调用成功，返回GeneralResult对象
+                        String content = OCRManagerUtil.getResult(data);
+                        UiUtils.show(content);
+                        Log.e("ocrRes", content + "");
+                        try {
+                            JSONObject jsonObject = new JSONObject(content);
+                            int count = jsonObject.getInt("words_result_num");
+                            if (count == 2) {
+                                JSONArray jsonArray = jsonObject.getJSONArray("words_result");
+                                JSONObject jsonObject1 = jsonArray.getJSONObject(0);
+                                String firMidStr = jsonObject1.getString("words");
+                                JSONObject jsonObject2 = jsonArray.getJSONObject(1);
+                                String secMidStr = jsonObject2.getString("words");
+                                query_certificate_num_Str = firMidStr.substring(firMidStr.indexOf(":") + 1).trim();
+                                query_certificate_unitID_Str = secMidStr.substring(secMidStr.indexOf(":") + 1).trim();
+                                if (TextUtils.isEmpty(query_certificate_num_Str) || TextUtils.isEmpty(query_certificate_unitID_Str)) {
+                                    UiUtils.show("非法图片，请重试。");
+                                }
+                                query_certificate_num_Edt.setText(query_certificate_num_Str);
+                                query_certificate_unitID_Edt.setText(query_certificate_unitID_Str);
+                            } else {
+                                UiUtils.show("非法图片，请重试。");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            UiUtils.show("非法图片，请重试。");
+                        }
+                    }
+
+                    @Override
+                    public void failed(OCRError error) {
+                        // 调用失败，返回OCRError对象
+                        Log.e("ocrErr", "错误信息：" + error.getMessage());
+                    }
+                });
+            }
+        } else if (resultCode == RESULT_RECTANGLE_CAMERA) {
+            if (requestCode == OPEN_SCAN_QUERYCERITIFICATE) {
+                String resultStr = data.getStringExtra("resultString");
+                ToastUtils.showToast(QueryCertificate.this,resultStr);
+                try {
+                    int mid = resultStr.indexOf("营业执照编号：");
+                    String firMidStr = resultStr.substring(0, mid).trim();
+                    String secMidStr = resultStr.substring(mid).trim();
+                    query_certificate_num_Str = firMidStr.substring(firMidStr.indexOf("：") + 1).trim();
+                    query_certificate_num_Edt.setText(query_certificate_num_Str);
+                    query_certificate_unitID_Str = secMidStr.substring(secMidStr.indexOf("：") + 1).trim();
+                    query_certificate_unitID_Edt.setText(query_certificate_unitID_Str);
+                    UiUtils.show("扫描成功");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    UiUtils.show("对不起，您的二维码的信息不符合我们的要求，请重试.");
+                }
+            }
         }
     }
 
@@ -244,6 +397,8 @@ public class QueryCertificate extends BaseActivity {
                         }
                     } else {
                         conListData.clear();
+                        conListData3.clear();
+                        conListData4.clear();
                         //条件查询
                         String pName = "";
                         JSONObject vobj = null;
@@ -309,56 +464,58 @@ public class QueryCertificate extends BaseActivity {
                                 conListData.add(TextUtils.isEmpty(vobj.optString("certificationName")) ? "未找到" : vobj.optString("certificationName"));
                                 conListData.add("提交人");
                                 conListData.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
-                            } else if (!TextUtils.equals(tempJSONObject.optString("testDataUpload"), "null")) {
-                                conListData.add("委托人单位编号");
-                                conListData.add(tempJSONObject.optString("unitID"));
-                                conListData.add("委托人单位名称");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("unitName")) ? "未找到" : vobj.optString("unitName"));
-                                conListData.add("交易平台名称");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("platformName")) ? "未找到" : vobj.optString("platformName"));
-                                conListData.add("交易平台版本");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("edition")) ? "未找到" : vobj.optString("edition"));
-                                conListData.add("检测机构名称");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
-                                conListData.add("检测报告结论");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
-                                conListData.add("检测时间");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("testTime")) ? "未找到" : vobj.optString("testTime"));
-                                conListData.add("检测人证件号码");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("testingPersonID")) ? "未找到" : vobj.optString("testingPersonID"));
-                                conListData.add("检测人姓名");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("testingPersonName")) ? "未找到" : vobj.optString("testingPersonName"));
-                                conListData.add("数据上传人证件号码");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("postPersonID")) ? "未找到" : vobj.optString("postPersonID"));
-                                conListData.add("数据上传人证件姓名");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
-                            } else if (!TextUtils.equals(tempJSONObject.optString("trialRunDataUpload"), "null")) {
-                                conListData.add("证书编号");
-                                conListData.add(tempJSONObject.optString("certificateID"));
-                                conListData.add("委托人单位编号");
-                                conListData.add(tempJSONObject.optString("unitID"));
-                                conListData.add("委托人单位名称");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("unitName")) ? "未找到" : vobj.optString("unitName"));
-                                conListData.add("交易平台名称");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("platformName")) ? "未找到" : vobj.optString("platformName"));
-                                conListData.add("交易平台版本");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("edition")) ? "未找到" : vobj.optString("edition"));
-                                conListData.add("检测机构编号");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
-                                conListData.add("检测机构名称");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
-                                conListData.add("检测报告结论");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
-                                conListData.add("试运行时间");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("testTime")) ? "未找到" : vobj.optString("testTime"));
-                                conListData.add("检测人证件号码");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("testingPersonID")) ? "未找到" : vobj.optString("testingPersonID"));
-                                conListData.add("检测人姓名");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("testingPersonName")) ? "未找到" : vobj.optString("testingPersonName"));
-                                conListData.add("数据上传人证件号码");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("postPersonID")) ? "未找到" : vobj.optString("postPersonID"));
-                                conListData.add("数据上传人证件姓名");
-                                conListData.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
+                            }
+                            if (!TextUtils.equals(tempJSONObject.optString("testDataUpload"), "null")) {
+                                conListData3.add("委托人单位编号");
+                                conListData3.add(tempJSONObject.optString("unitID"));
+                                conListData3.add("委托人单位名称");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("unitName")) ? "未找到" : vobj.optString("unitName"));
+                                conListData3.add("交易平台名称");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("platformName")) ? "未找到" : vobj.optString("platformName"));
+                                conListData3.add("交易平台版本");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("edition")) ? "未找到" : vobj.optString("edition"));
+                                conListData3.add("检测机构名称");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
+                                conListData3.add("检测报告结论");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
+                                conListData3.add("检测时间");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("testTime")) ? "未找到" : vobj.optString("testTime"));
+                                conListData3.add("检测人证件号码");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("testingPersonID")) ? "未找到" : vobj.optString("testingPersonID"));
+                                conListData3.add("检测人姓名");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("testingPersonName")) ? "未找到" : vobj.optString("testingPersonName"));
+                                conListData3.add("数据上传人证件号码");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("postPersonID")) ? "未找到" : vobj.optString("postPersonID"));
+                                conListData3.add("数据上传人证件姓名");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
+                            }
+                            if (!TextUtils.equals(tempJSONObject.optString("trialRunDataUpload"), "null")) {
+                                conListData4.add("证书编号");
+                                conListData4.add(tempJSONObject.optString("certificateID"));
+                                conListData4.add("委托人单位编号");
+                                conListData4.add(tempJSONObject.optString("unitID"));
+                                conListData4.add("委托人单位名称");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("unitName")) ? "未找到" : vobj.optString("unitName"));
+                                conListData4.add("交易平台名称");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("platformName")) ? "未找到" : vobj.optString("platformName"));
+                                conListData4.add("交易平台版本");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("edition")) ? "未找到" : vobj.optString("edition"));
+                                conListData4.add("检测机构编号");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
+                                conListData4.add("检测机构名称");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
+                                conListData4.add("检测报告结论");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
+                                conListData4.add("试运行时间");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("testTime")) ? "未找到" : vobj.optString("testTime"));
+                                conListData4.add("检测人证件号码");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("testingPersonID")) ? "未找到" : vobj.optString("testingPersonID"));
+                                conListData4.add("检测人姓名");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("testingPersonName")) ? "未找到" : vobj.optString("testingPersonName"));
+                                conListData4.add("数据上传人证件号码");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("postPersonID")) ? "未找到" : vobj.optString("postPersonID"));
+                                conListData4.add("数据上传人证件姓名");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
                             }
                         }
                     }
@@ -377,6 +534,12 @@ public class QueryCertificate extends BaseActivity {
                     mulQueryListAdapter.notifyDataSetChanged();
                 } else {
                     conQueryListAdapter.notifyDataSetChanged();
+                    conQueryListAdapter3.notifyDataSetChanged();
+                    conQueryListAdapter4.notifyDataSetChanged();
+
+                    query_certificate_text2.setVisibility(View.VISIBLE);
+                    query_certificate_grid2.setVisibility(View.VISIBLE);
+                    query_certificate_text3.setVisibility(View.VISIBLE);
                 }
             } else if (TextUtils.equals(s, "500")) {
                 UiUtils.show(msg);
@@ -413,11 +576,47 @@ public class QueryCertificate extends BaseActivity {
                                 "QueryAllCertsTask", "?peer=peer0.org1.example.com&fcn=queryAllCerts&args=['']", token).execute();
                     } else {
                         query_certificate_linear.setVisibility(View.VISIBLE);
+                        qr_code_query_certificate_Btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                BaseActivity.requestRuntimePermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionListener() {
+                                    @Override
+                                    public void onGranted() {
+                                        openScan();
+                                    }
+
+                                    @Override
+                                    public void onDenied(List<String> deniedPermission) {
+                                        dialog(QueryCertificate.this, "识别二维码需要该权限，拒绝后将不能正常使用，是否重新开启此权限？");
+                                    }
+                                });
+                            }
+                        });
+                        img_ocr_query_certificate_Btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                BaseActivity.requestRuntimePermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionListener() {
+                                    @Override
+                                    public void onGranted() {
+                                        Intent imageIntent = new Intent();
+                                        imageIntent.setType("image/*");
+                                        imageIntent.setAction(Intent.ACTION_GET_CONTENT);
+                                        startActivityForResult(imageIntent, 1);
+                                    }
+
+                                    @Override
+                                    public void onDenied(List<String> deniedPermission) {
+                                        dialog(QueryCertificate.this, "OCR识别需要该权限，拒绝后将不能正常使用，是否重新开启此权限？");
+                                    }
+                                });
+                            }
+                        });
+
                         query_certificate_Btn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                String query_certificate_num_Str = query_certificate_num_Edt.getText().toString().trim();
-                                String query_certificate_unitID_Str = query_certificate_unitID_Edt.getText().toString().trim();
+                                query_certificate_num_Str = query_certificate_num_Edt.getText().toString().trim();
+                                query_certificate_unitID_Str = query_certificate_unitID_Edt.getText().toString().trim();
                                 if (!TextUtils.isEmpty(query_certificate_num_Str) && !TextUtils.isEmpty(query_certificate_unitID_Str)) {
                                     new QueryAllCertsTask(QueryCertificate.this,
                                             "QueryAllCertsTask",

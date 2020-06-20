@@ -11,6 +11,7 @@ import android.media.MediaRecorder;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -70,6 +71,10 @@ public class BaseActivity extends AppCompatActivity {
 
     protected Chronometer mRecordTime;
     protected long mPauseTime = 0;           //录制暂停时间间隔
+
+    protected static final String DATA_PATH = Environment.getExternalStorageDirectory().toString() + "/Tess";
+    protected static final String tessdata = DATA_PATH + File.separator + "tessdata";
+    protected static String language = "chi_sim";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

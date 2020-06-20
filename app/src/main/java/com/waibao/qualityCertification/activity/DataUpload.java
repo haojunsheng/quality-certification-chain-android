@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,12 +18,18 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.baidu.ocr.sdk.exception.OCRError;
+import com.baidu.ocr.sdk.model.GeneralResult;
 import com.waibao.qualityCertification.R;
 import com.waibao.qualityCertification.base.BaseActivity;
 import com.waibao.qualityCertification.base.BaseAsyTask;
 import com.waibao.qualityCertification.interfaceMy.PermissionListener;
 import com.waibao.qualityCertification.util.FileUtils;
+import com.waibao.qualityCertification.util.IDCardUtils;
+import com.waibao.qualityCertification.util.MipcaActivityCapture;
+import com.waibao.qualityCertification.util.OCRManagerUtil;
 import com.waibao.qualityCertification.util.SHAUtil;
+import com.waibao.qualityCertification.util.ToastUtils;
 import com.waibao.qualityCertification.util.UiUtils;
 
 import org.json.JSONArray;
@@ -32,6 +39,15 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.List;
 
+import static com.waibao.qualityCertification.constants.IntentConstants.OPEN_SCAN_DATAUPLOAD_DATA;
+import static com.waibao.qualityCertification.constants.IntentConstants.OPEN_SCAN_DATAUPLOAD_DOCUMENT_AUDIT;
+import static com.waibao.qualityCertification.constants.IntentConstants.OPEN_SCAN_DATAUPLOAD_ERITIFICATE_APPLICATION;
+import static com.waibao.qualityCertification.constants.IntentConstants.OPEN_SCAN_DATAUPLOAD_JIANCE;
+import static com.waibao.qualityCertification.constants.IntentConstants.OPEN_SCAN_DATAUPLOAD_SITE__AUDIT;
+import static com.waibao.qualityCertification.constants.IntentConstants.OPEN_SCAN_DATAUPLOAD_TRY_RUN;
+import static com.waibao.qualityCertification.constants.IntentConstants.OPEN_SCAN_QUERYCERITIFICATE;
+import static com.waibao.qualityCertification.constants.IntentConstants.RESULT_RECTANGLE_CAMERA;
+
 // 数据上传
 public class DataUpload extends BaseActivity implements View.OnClickListener {
     private Toolbar toolbar;
@@ -39,6 +55,10 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
     private Spinner data_upload_spinner2;
     private String[][] data = {{"证书申请资料上传", "文件审核资料上传", "现场审核资料上传", "证书数据上传"}, {"检测检验上传", "试运行数据上传"}};
     private ArrayAdapter<String> dataAdapter = null;
+    private Button data_upload_qrCode_btn;
+    private Button data_upload_ocr_btn;
+    private int[] qrCodeIntentConstants = {OPEN_SCAN_DATAUPLOAD_ERITIFICATE_APPLICATION, OPEN_SCAN_DATAUPLOAD_DOCUMENT_AUDIT,
+            OPEN_SCAN_DATAUPLOAD_SITE__AUDIT, OPEN_SCAN_DATAUPLOAD_DATA, OPEN_SCAN_DATAUPLOAD_JIANCE, OPEN_SCAN_DATAUPLOAD_TRY_RUN};
     // 检测数据上传相关
     private LinearLayout data_upload_jiance_line = null;
     private EditText data_upload_jiance_certificateID = null;
@@ -215,6 +235,10 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
     private void initView() {
         data_upload_spinner1 = (Spinner) findViewById(R.id.data_upload_spinner1);
         data_upload_spinner2 = (Spinner) findViewById(R.id.data_upload_spinner2);
+        data_upload_qrCode_btn = (Button) findViewById(R.id.data_upload_qrCode_btn);
+        data_upload_qrCode_btn.setOnClickListener(this);
+        data_upload_ocr_btn = (Button) findViewById(R.id.data_upload_ocr_btn);
+        data_upload_ocr_btn.setOnClickListener(this);
         initJianceView();
         initCertificateApplicationView();
         initDocumentAuditView();
@@ -227,6 +251,7 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
                 data_upload_certificate_application_line.setVisibility(View.GONE);
                 data_upload_document_audit_line.setVisibility(View.GONE);
                 data_upload_certificate_data_line.setVisibility(View.GONE);
+                data_upload_site_audit_line.setVisibility(View.GONE);
                 if (pos1 == 0) {
                     dataAdapter = new ArrayAdapter<String>(DataUpload.this, android.R.layout.simple_spinner_item, data[0]);
                     if (TextUtils.equals(unittype, "1")) {
@@ -251,13 +276,16 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
                     data_upload_spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> adapterView, View view, final int pos2, long l) {
+                            data_upload_jiance_line.setVisibility(View.GONE);
                             data_upload_certificate_application_line.setVisibility(View.GONE);
                             data_upload_document_audit_line.setVisibility(View.GONE);
-                            data_upload_site_audit_line.setVisibility(View.GONE);
                             data_upload_certificate_data_line.setVisibility(View.GONE);
+                            data_upload_site_audit_line.setVisibility(View.GONE);
                             tempPos1 = pos1;
                             tempPos2 = pos2;
                             if (pos1 == 0) {
+                                data_upload_qrCode_btn.setVisibility(View.GONE);
+                                data_upload_ocr_btn.setVisibility(View.GONE);
                                 if (pos2 == 0) {
                                     data_upload_certificate_application_line.setVisibility(View.VISIBLE);
                                     data_upload_certificate_application_operatorID.setText(postPersonID);
@@ -271,6 +299,8 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
                                     data_upload_site_audit_postPersonID.setText(postPersonID);
                                     data_upload_site_audit_postPersonName.setText(postPersonName);
                                 } else {
+                                    data_upload_qrCode_btn.setVisibility(View.VISIBLE);
+                                    data_upload_ocr_btn.setVisibility(View.VISIBLE);
                                     data_upload_certificate_data_line.setVisibility(View.VISIBLE);
                                     data_upload_certificate_data_postPersonID.setText(postPersonID);
                                     data_upload_certificate_data_postPersonName.setText(postPersonName);
@@ -411,7 +441,8 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
 
     private boolean isValidInput(int cnt, String... args) {
         for (int i = 0; i < cnt; ++i) {
-            if (args[i].length() != 18) {
+            if (!IDCardUtils.isIDNumber(args[i])) {
+                UiUtils.show("身份证号有误");
                 return false;
             }
         }
@@ -434,6 +465,35 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.data_upload_qrCode_btn:
+                BaseActivity.requestRuntimePermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionListener() {
+                    @Override
+                    public void onGranted() {
+                        openScan();
+                    }
+
+                    @Override
+                    public void onDenied(List<String> deniedPermission) {
+                        dialog(DataUpload.this, "识别二维码需要该权限，拒绝后将不能正常使用，是否重新开启此权限？");
+                    }
+                });
+                break;
+            case R.id.data_upload_ocr_btn:
+                BaseActivity.requestRuntimePermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionListener() {
+                    @Override
+                    public void onGranted() {
+                        Intent imageIntent = new Intent();
+                        imageIntent.setType("image/*");
+                        imageIntent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(imageIntent, 4);
+                    }
+
+                    @Override
+                    public void onDenied(List<String> deniedPermission) {
+                        dialog(DataUpload.this, "OCR识别需要该权限，拒绝后将不能正常使用，是否重新开启此权限？");
+                    }
+                });
+                break;
             // 检测检验上传
             case R.id.data_upload_jiance_btn:
                 data_upload_jiance_certificateIDStr = data_upload_jiance_certificateID.getText().toString().trim();
@@ -767,39 +827,249 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    public void openScan() {
+        //启动扫一扫
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString("TAG", "DataUpload");
+        intent.setClass(DataUpload.this, MipcaActivityCapture.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, qrCodeIntentConstants[tempPos1 * 4 + tempPos2]);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 1) {
                 Uri uri = data.getData();
                 data_upload_certificateImagePath = FileUtils.getPath(DataUpload.this, uri);
                 data_upload_certificate_data_filename.setText("已上传");
                 data_upload_certificateImageURL = new StringBuffer("data:image/jpeg;base64,").append(FileUtils.imageToBase64(data_upload_certificateImagePath)).toString();
                 data_upload_certificate_applicationHash = SHAUtil.getSHA256StrJava(data_upload_certificateImageURL);
-            } else {
-                UiUtils.show("您没有选择任何文件");
-            }
-        } else if (requestCode == 2) {
-            if (resultCode == Activity.RESULT_OK) {
+            } else if (requestCode == 2) {
                 Uri uri = data.getData();
                 data_upload_certificateImagePath = FileUtils.getPath(DataUpload.this, uri);
                 data_upload_certificate_application_printFileID.setText("已上传");
                 data_upload_certificate_application_applicationImageURL = new StringBuffer("data:image/jpeg;base64,").append(FileUtils.imageToBase64(data_upload_certificateImagePath)).toString();
                 data_upload_certificate_application_applicationHash = SHAUtil.getSHA256StrJava(data_upload_certificate_application_applicationImageURL);
-            } else {
-                UiUtils.show("您没有选择任何文件");
-            }
-        } else {
-            if (resultCode == Activity.RESULT_OK) {
+            } else if (requestCode == 3) {
                 Uri uri = data.getData();
                 data_upload_certificateImagePath = FileUtils.getPath(DataUpload.this, uri);
                 data_upload_certificate_application_verificationPrintFileID.setText("已上传");
                 data_upload_certificate_application_LegalFileImageURL = new StringBuffer("data:image/jpeg;base64,").append(FileUtils.imageToBase64(data_upload_certificateImagePath)).toString();
                 data_upload_certificate_application_legalFileHash = SHAUtil.getSHA256StrJava(data_upload_certificate_application_LegalFileImageURL);
+            } else if (requestCode == 4) {
+                Uri uri = data.getData();
+                String data_upload_ocr_ImagePath = FileUtils.getPath(DataUpload.this, uri);
+                OCRManagerUtil.recognizeAccurateBasic(this, data_upload_ocr_ImagePath, new OCRManagerUtil.OCRCallBack<GeneralResult>() {
+                    @Override
+                    public void succeed(GeneralResult data) {
+                        // 调用成功，返回GeneralResult对象
+                        String content = OCRManagerUtil.getResult(data);
+                        UiUtils.show(content);
+                        Log.e("ocrRes", content + "");
+                        try {
+                            JSONObject jsonObject = new JSONObject(content);
+                            int count = jsonObject.getInt("words_result_num");
+                            if (count == 2) {
+                                JSONArray jsonArray = jsonObject.getJSONArray("words_result");
+                                JSONObject jsonObject1 = jsonArray.getJSONObject(0);
+                                String firMidStr = jsonObject1.getString("words");
+                                JSONObject jsonObject2 = jsonArray.getJSONObject(1);
+                                String secMidStr = jsonObject2.getString("words");
+                                data_upload_certificate_data_certificateIDStr = firMidStr.substring(firMidStr.indexOf(":") + 1).trim();
+                                data_upload_certificate_data_unitIDStr = secMidStr.substring(secMidStr.indexOf(":") + 1).trim();//出厂日期
+                                if (TextUtils.isEmpty(data_upload_certificate_data_certificateIDStr) || TextUtils.isEmpty(data_upload_certificate_data_unitIDStr)) {
+                                    UiUtils.show("非法图片，请重试。");
+                                }
+                                data_upload_certificate_data_certificateID.setText(data_upload_certificate_data_certificateIDStr);
+                                data_upload_certificate_data_unitID.setText(data_upload_certificate_data_unitIDStr);
+                                UiUtils.show("扫描成功");
+                            } else {
+                                UiUtils.show("非法图片，请重试。");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            UiUtils.show("非法图片，请重试。");
+                        }
+                    }
+
+                    @Override
+                    public void failed(OCRError error) {
+                        // 调用失败，返回OCRError对象
+                        Log.e("ocrErr", "错误信息：" + error.getMessage());
+                    }
+                });
             } else {
-                UiUtils.show("您没有选择任何文件");
+
             }
+        } else if (resultCode == RESULT_RECTANGLE_CAMERA) {
+            String resultStr = data.getStringExtra("resultString");
+            ToastUtils.showToast(DataUpload.this, resultStr);
+            switch (requestCode) {
+//                case OPEN_SCAN_DATAUPLOAD_ERITIFICATE_APPLICATION:
+//                    try {
+//                        jsonObject = new JSONObject(resultJson);
+//                        data_upload_certificate_application_unitIDStr = jsonObject.optString("data_upload_certificate_application_unitID");
+//                        data_upload_certificate_application_unitID.setText(data_upload_certificate_application_unitIDStr);
+//                        data_upload_certificate_application_unitNameStr = jsonObject.optString("data_upload_certificate_application_unitName");
+//                        data_upload_certificate_application_unitName.setText(data_upload_certificate_application_unitNameStr);
+//                        data_upload_certificate_application_platformNameStr = jsonObject.optString("data_upload_certificate_application_platformName");
+//                        data_upload_certificate_application_platformName.setText(data_upload_certificate_application_platformNameStr);
+//                        data_upload_certificate_application_editionStr = jsonObject.optString("data_upload_certificate_application_edition");
+//                        data_upload_certificate_application_edition.setText(data_upload_certificate_application_editionStr);
+//                        data_upload_certificate_application_deployPlaceStr = jsonObject.optString("data_upload_certificate_application_deployPlace");
+//                        data_upload_certificate_application_deployPlace.setText(data_upload_certificate_application_deployPlaceStr);
+//                        data_upload_certificate_application_runPlaceStr = jsonObject.optString("data_upload_certificate_application_runPlace");
+//                        data_upload_certificate_application_runPlace.setText(data_upload_certificate_application_runPlaceStr);
+//                        data_upload_certificate_application_runStateStr = jsonObject.optString("data_upload_certificate_application_runState");
+//                        data_upload_certificate_application_runState.setText(data_upload_certificate_application_runStateStr);
+//                        data_upload_certificate_application_applyTimeStr = jsonObject.optString("data_upload_certificate_application_applyTime");
+//                        data_upload_certificate_application_applyTime.setText(data_upload_certificate_application_applyTimeStr);
+//                        UiUtils.show("扫描成功");
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        UiUtils.show("对不起，您的二维码的信息不符合我们的要求，请重试.");
+//                    }
+//                    break;
+//                case OPEN_SCAN_DATAUPLOAD_DOCUMENT_AUDIT:
+//                    try {
+//                        jsonObject = new JSONObject(resultJson);
+//                        data_upload_document_audit_unitNameStr = jsonObject.optString("data_upload_document_audit_unitName");
+//                        data_upload_document_audit_unitName.setText(data_upload_document_audit_unitNameStr);
+//                        data_upload_document_audit_platformNameStr = jsonObject.optString("data_upload_document_audit_platformName");
+//                        data_upload_document_audit_platformName.setText(data_upload_document_audit_platformNameStr);
+//                        data_upload_document_audit_editionStr = jsonObject.optString("data_upload_document_audit_edition");
+//                        data_upload_document_audit_edition.setText(data_upload_document_audit_editionStr);
+//                        data_upload_document_audit_certificationUnitNameStr = jsonObject.optString("data_upload_document_audit_certificationUnitName");
+//                        data_upload_document_audit_certificationUnitName.setText(data_upload_document_audit_certificationUnitNameStr);
+//                        data_upload_document_audit_conclusionStr = jsonObject.optString("data_upload_document_audit_conclusion");
+//                        data_upload_document_audit_conclusion.setText(data_upload_document_audit_conclusionStr);
+//                        data_upload_document_audit_auditTimeStr = jsonObject.optString("data_upload_document_audit_auditTime");
+//                        data_upload_document_audit_auditTime.setText(data_upload_document_audit_auditTimeStr);
+//                        data_upload_document_audit_auditorIDStr = jsonObject.optString("data_upload_document_audit_auditorID");
+//                        data_upload_document_audit_auditorID.setText(data_upload_document_audit_auditorIDStr);
+//                        data_upload_document_audit_auditorNameStr = jsonObject.optString("data_upload_document_audit_auditorName");
+//                        data_upload_document_audit_auditorName.setText(data_upload_document_audit_auditorNameStr);
+//                        UiUtils.show("扫描成功");
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        UiUtils.show("对不起，您的二维码的信息不符合我们的要求，请重试.");
+//                    }
+//                    break;
+//                case OPEN_SCAN_DATAUPLOAD_SITE__AUDIT:
+//                    try {
+//                        jsonObject = new JSONObject(resultJson);
+//                        data_upload_site_audit_unitIDStr = jsonObject.optString("data_upload_site_audit_unitID");
+//                        data_upload_site_audit_unitID.setText(data_upload_site_audit_unitIDStr);
+//                        data_upload_site_audit_unitNameStr = jsonObject.optString("data_upload_site_audit_unitName");
+//                        data_upload_site_audit_unitName.setText(data_upload_site_audit_unitNameStr);
+//                        data_upload_site_audit_platformNameStr = jsonObject.optString("data_upload_site_audit_platformName");
+//                        data_upload_site_audit_platformName.setText(data_upload_site_audit_platformNameStr);
+//                        data_upload_site_audit_editionStr = jsonObject.optString("data_upload_site_audit_edition");
+//                        data_upload_site_audit_edition.setText(data_upload_site_audit_editionStr);
+//                        data_upload_site_audit_certificationUnitIDStr = jsonObject.optString("data_upload_site_audit_certificationUnitID");
+//                        data_upload_site_audit_certificationUnitID.setText(data_upload_site_audit_certificationUnitIDStr);
+//                        data_upload_site_audit_certificationUnitNameStr = jsonObject.optString("data_upload_site_audit_certificationUnitName");
+//                        data_upload_site_audit_certificationUnitName.setText(data_upload_site_audit_certificationUnitNameStr);
+//                        data_upload_site_audit_conclusionStr = jsonObject.optString("data_upload_site_audit_conclusion");
+//                        data_upload_site_audit_conclusion.setText(data_upload_site_audit_conclusionStr);
+//                        data_upload_site_audit_auditTimeStr = jsonObject.optString("data_upload_site_audit_auditTime");
+//                        data_upload_site_audit_auditTime.setText(data_upload_site_audit_auditTimeStr);
+//                        data_upload_site_audit_auditEndTimeStr = jsonObject.optString("data_upload_site_audit_auditEndTime");
+//                        data_upload_site_audit_auditEndTime.setText(data_upload_site_audit_auditEndTimeStr);
+//                        data_upload_site_audit_auditorIDStr = jsonObject.optString("data_upload_site_audit_auditorID");
+//                        data_upload_site_audit_auditorID.setText(data_upload_site_audit_auditorIDStr);
+//                        data_upload_site_audit_auditorNameStr = jsonObject.optString("data_upload_site_audit_auditorName");
+//                        data_upload_site_audit_auditorName.setText(data_upload_site_audit_auditorNameStr);
+//                        UiUtils.show("扫描成功");
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        UiUtils.show("对不起，您的二维码的信息不符合我们的要求，请重试.");
+//                    }
+//                    break;
+                case OPEN_SCAN_DATAUPLOAD_DATA:
+                    try {
+                        int mid = resultStr.indexOf("营业执照编号：");
+                        String firMidStr = resultStr.substring(0, mid).trim();
+                        String secMidStr = resultStr.substring(mid).trim();
+                        data_upload_certificate_data_certificateIDStr = firMidStr.substring(firMidStr.indexOf("：") + 1).trim();
+                        data_upload_certificate_data_certificateID.setText(data_upload_certificate_data_certificateIDStr);
+                        data_upload_certificate_data_unitIDStr = secMidStr.substring(secMidStr.indexOf("：") + 1).trim();
+                        data_upload_certificate_data_unitID.setText(data_upload_certificate_data_unitIDStr);
+//                        data_upload_certificate_data_unitNameStr = jsonObject.optString("data_upload_certificate_data_unitName");
+//                        data_upload_certificate_data_unitName.setText(data_upload_certificate_data_unitNameStr);
+//                        data_upload_certificate_data_registerAddrStr = jsonObject.optString("data_upload_certificate_data_registerAddr");
+//                        data_upload_certificate_data_registerAddr.setText(data_upload_certificate_data_registerAddrStr);
+//                        data_upload_certificate_data_platformNameStr = jsonObject.optString("data_upload_certificate_data_platformName");
+//                        data_upload_certificate_data_platformName.setText(data_upload_certificate_data_platformNameStr);
+//                        data_upload_certificate_data_editionStr = jsonObject.optString("data_upload_certificate_data_edition");
+//                        data_upload_certificate_data_edition.setText(data_upload_certificate_data_editionStr);
+//                        data_upload_certificate_data_websiteStr = jsonObject.optString("data_upload_certificate_data_website");
+//                        data_upload_certificate_data_website.setText(data_upload_certificate_data_websiteStr);
+//                        data_upload_certificate_data_auditAddrStr = jsonObject.optString("data_upload_certificate_data_auditAddr");
+//                        data_upload_certificate_data_auditAddr.setText(data_upload_certificate_data_auditAddrStr);
+//                        data_upload_certificate_data_authenticationStandardStr = jsonObject.optString("data_upload_certificate_data_authenticationStandard");
+//                        data_upload_certificate_data_authenticationStandard.setText(data_upload_certificate_data_authenticationStandardStr);
+//                        data_upload_certificate_data_certificationModeStr = jsonObject.optString("data_upload_certificate_data_certificationMode");
+//                        data_upload_certificate_data_certificationMode.setText(data_upload_certificate_data_certificationModeStr);
+//                        data_upload_certificate_data_certificationConclusionStr = jsonObject.optString("data_upload_certificate_data_certificationConclusion");
+//                        data_upload_certificate_data_certificationConclusion.setText(data_upload_certificate_data_certificationConclusionStr);
+//                        data_upload_certificate_data_awardDateStr = jsonObject.optString("data_upload_certificate_data_awardDate");
+//                        data_upload_certificate_data_awardDate.setText(data_upload_certificate_data_awardDateStr);
+//                        data_upload_certificate_data_replaceDateStr = jsonObject.optString("data_upload_certificate_data_replaceDate");
+//                        data_upload_certificate_data_replaceDate.setText(data_upload_certificate_data_replaceDateStr);
+//                        data_upload_certificate_data_validityTermStr = jsonObject.optString("data_upload_certificate_data_validityTerm");
+//                        data_upload_certificate_data_validityTerm.setText(data_upload_certificate_data_validityTermStr);
+//                        data_upload_certificate_data_certificationIDStr = jsonObject.optString("data_upload_certificate_data_certificationID");
+//                        data_upload_certificate_data_certificationID.setText(data_upload_certificate_data_certificationIDStr);
+//                        data_upload_certificate_data_certificationIDStr = jsonObject.optString("data_upload_certificate_data_certificationID");
+//                        data_upload_certificate_data_certificationID.setText(data_upload_certificate_data_certificationIDStr);
+                        UiUtils.show("扫描成功");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        UiUtils.show("对不起，您的二维码的信息不符合我们的要求，请重试.");
+                    }
+                    break;
+//                case OPEN_SCAN_DATAUPLOAD_JIANCE:
+//                case OPEN_SCAN_DATAUPLOAD_TRY_RUN:
+//                    try {
+//                        jsonObject = new JSONObject(resultJson);
+//                        data_upload_jiance_certificateIDStr = jsonObject.optString("data_upload_jiance_certificateID");
+//                        data_upload_jiance_certificateID.setText(data_upload_jiance_certificateIDStr);
+//                        data_upload_jiance_unitIDStr = jsonObject.optString("data_upload_jiance_unitID");
+//                        data_upload_jiance_unitID.setText(data_upload_jiance_unitIDStr);
+//                        data_upload_jiance_unitNameStr = jsonObject.optString("data_upload_jiance_unitName");
+//                        data_upload_jiance_unitName.setText(data_upload_jiance_unitNameStr);
+//                        data_upload_jiance_platformNameStr = jsonObject.optString("data_upload_jiance_platformName");
+//                        data_upload_jiance_platformName.setText(data_upload_jiance_platformNameStr);
+//                        data_upload_jiance_editionStr = jsonObject.optString("data_upload_jiance_edition");
+//                        data_upload_jiance_edition.setText(data_upload_jiance_editionStr);
+//                        data_upload_jiance_testUnitIDStr = jsonObject.optString("data_upload_jiance_testUnitID");
+//                        data_upload_jiance_testUnitID.setText(data_upload_jiance_testUnitIDStr);
+//                        data_upload_jiance_testUnitNameStr = jsonObject.optString("data_upload_jiance_testUnitName");
+//                        data_upload_jiance_testUnitName.setText(data_upload_jiance_testUnitNameStr);
+//                        data_upload_jiance_conclusionStr = jsonObject.optString("data_upload_jiance_conclusion");
+//                        data_upload_jiance_conclusion.setText(data_upload_jiance_conclusionStr);
+//                        data_upload_jiance_testTimeStr = jsonObject.optString("data_upload_jiance_testTime");
+//                        data_upload_jiance_testTime.setText(data_upload_jiance_testTimeStr);
+//                        data_upload_jiance_testingPersonIDStr = jsonObject.optString("data_upload_jiance_testingPersonID");
+//                        data_upload_jiance_testingPersonID.setText(data_upload_jiance_testingPersonIDStr);
+//                        data_upload_jiance_testingPersonNameStr = jsonObject.optString("data_upload_jiance_testingPersonName");
+//                        data_upload_jiance_testingPersonName.setText(data_upload_jiance_testingPersonNameStr);
+//                        UiUtils.show("扫描成功");
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        UiUtils.show("对不起，您的二维码的信息不符合我们的要求，请重试.");
+//                    }
+//                    break;
+                default:
+                    break;
+            }
+        } else {
+
         }
     }
 

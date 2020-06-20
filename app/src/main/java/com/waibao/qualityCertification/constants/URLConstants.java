@@ -26,6 +26,8 @@ public class URLConstants {
     public static final String REVIEW_SUCCESS_URL = "/reviewSuccess";//待审核用户列表
     public static final String REVIEW_FAIL_URL = "/reviewFail";//待审核用户列表
     public static final String UNIT_USER_URL = "/getUnitUser";//获取用户列表
+    public static final String INSTITUTION_INFO_URL = "/getInstitutions";//查询机构
+    public static final String UPDATE_INSTITUTION_STATUS_URL = "/updateInstitutionStatus";//变更机构状态
     public static final String CHECK_LIST_URL = "/getCheckList";//获取审核列表
     public static final String DATA_DETAILS_URL = "/getDataDetails";//审核数据详细列表
     public static final String CHECK_CERTIFICATE_URL = "/checkCertificate";//审核数据

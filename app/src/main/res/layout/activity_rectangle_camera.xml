@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_rectangleCamera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/main_hue">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="扫一扫"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:layout_marginRight="20dp"
+            android:background="@mipmap/question" />
+    </android.support.v7.widget.Toolbar>
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="如果较长时间未扫描出二维码，尝试调整手机与二维码的距离"-->
+    <!--android:textColor="#fff" />-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <SurfaceView
+            android:id="@+id/previewRectangleCamera_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="触摸屏幕对焦"
+            android:textColor="#fff" />
+
+        <com.lingyun_chain_traceGoodsSeller.view.RectangleCameraView
+            android:id="@+id/RectangleCameraView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="80dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/camera_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_margin="32dp"
+                android:src="@mipmap/camera_close" />
+
+            <ImageView
+                android:id="@+id/camera_take"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_margin="32dp"
+                android:src="@mipmap/camera_take" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -2,6 +2,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.waibao.qualityCertification">
+    <!-- 二维码扫描相关权限开始 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,7 +34,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.DataReviewDetail"></activity>
+        <activity android:name=".activity.InstitutionReview"></activity>
+        <activity android:name=".activity.DataReviewDetail" />
         <activity android:name=".activity.DataUpload" />
         <activity android:name=".activity.DataReview" />
         <activity android:name=".activity.QueryCertificate" />
@@ -40,7 +59,27 @@
         <activity android:name=".activity.RecoverPasswordActivity" />
         <activity android:name=".activity.AdvicesActivity" />
         <activity android:name=".activity.AboutUsActivity" />
-        <activity android:name=".activity.UserHelp" />
+        <activity android:name=".activity.UserHelp" /> <!-- 扫一扫开始 -->
+        <activity
+            android:name=".util.MipcaActivityCapture"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" /> <!-- 扫一扫结束 -->
+        <activity
+            android:name=".activity.RectangleCameraActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.waibao.qualityCertification.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

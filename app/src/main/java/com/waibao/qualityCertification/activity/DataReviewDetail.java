@@ -19,6 +19,7 @@ import com.waibao.qualityCertification.R;
 import com.waibao.qualityCertification.base.BaseActivity;
 import com.waibao.qualityCertification.base.BaseAsyTask;
 import com.waibao.qualityCertification.constants.URLConstants;
+import com.waibao.qualityCertification.util.IDCardUtils;
 import com.waibao.qualityCertification.util.UiUtils;
 
 import org.json.JSONArray;
@@ -614,7 +615,7 @@ public class DataReviewDetail extends BaseActivity implements View.OnClickListen
             data_review_detail_applyData_applicationPrintFileID.setText(applicationHash);
             data_review_detail_applyData_verificationPrintFileID.setText(legalFileHash);
             Glide.with(DataReviewDetail.this).load(URLConstants.ServerURL + URLConstants.WebPort + URLConstants.DOWNLOAD_URL + image1URL).apply(new RequestOptions().error(R.drawable.bg_pic_loading)).into(data_review_detail_applyData_applyimg);
-            Glide.with(DataReviewDetail.this).load(URLConstants.ServerURL + URLConstants.WebPort + URLConstants.DOWNLOAD_URL +image2URL).apply(new RequestOptions().error(R.drawable.bg_pic_loading)).into(data_review_detail_applyData_legalimg);
+            Glide.with(DataReviewDetail.this).load(URLConstants.ServerURL + URLConstants.WebPort + URLConstants.DOWNLOAD_URL + image2URL).apply(new RequestOptions().error(R.drawable.bg_pic_loading)).into(data_review_detail_applyData_legalimg);
             data_review_detail_applyData_unitName.setText(unitName);
             data_review_detail_applyData_platformName.setText(platformName);
             data_review_detail_applyData_edition.setText(edition);
@@ -722,7 +723,7 @@ public class DataReviewDetail extends BaseActivity implements View.OnClickListen
             data_review_detail_upData_certificationID.setText(certificationID);
             data_review_detail_upData_certificationName.setText(certificationName);
             data_review_detail_upData_certificateScanHASH.setText(certificateScanHASH);
-            Glide.with(DataReviewDetail.this).load(URLConstants.ServerURL + URLConstants.WebPort + URLConstants.DOWNLOAD_URL +image1URL).apply(new RequestOptions().error(R.drawable.bg_pic_loading)).into(data_review_detail_upData_certificateimg);
+            Glide.with(DataReviewDetail.this).load(URLConstants.ServerURL + URLConstants.WebPort + URLConstants.DOWNLOAD_URL + image1URL).apply(new RequestOptions().error(R.drawable.bg_pic_loading)).into(data_review_detail_upData_certificateimg);
             data_review_detail_upData_postPersonID.setText(postPersonID);
             data_review_detail_upData_postPersonName.setText(postPersonName);
             data_review_detail_upData_checkPersonID.setText(checkPersonID);
@@ -732,7 +733,8 @@ public class DataReviewDetail extends BaseActivity implements View.OnClickListen
 
     private boolean isValidInput(int cnt, String... args) {
         for (int i = 0; i < cnt; ++i) {
-            if (args[i].length() != 18) {
+            if (!IDCardUtils.isIDNumber(args[i])) {
+                UiUtils.show("身份证号有误");
                 return false;
             }
         }

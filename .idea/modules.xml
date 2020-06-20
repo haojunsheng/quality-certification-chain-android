@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="quality-certification-chain-android/app" />
       <module fileurl="file://$PROJECT_DIR$/github-quality-certification-chain-android.iml" filepath="$PROJECT_DIR$/github-quality-certification-chain-android.iml" group="quality-certification-chain-android" />
+      <module fileurl="file://$PROJECT_DIR$/ocr_ui/ocr_ui.iml" filepath="$PROJECT_DIR$/ocr_ui/ocr_ui.iml" group="quality-certification-chain-android/ocr_ui" />
       <module fileurl="file://$PROJECT_DIR$/quality-certification-chain-android.iml" filepath="$PROJECT_DIR$/quality-certification-chain-android.iml" group="quality-certification-chain-android" />
     </modules>
   </component>

@@ -12,6 +12,7 @@ import android.widget.EditText;
 import com.waibao.qualityCertification.R;
 import com.waibao.qualityCertification.base.BaseActivity;
 import com.waibao.qualityCertification.base.BaseAsyTask;
+import com.waibao.qualityCertification.util.IDCardUtils;
 import com.waibao.qualityCertification.util.UiUtils;
 
 import org.json.JSONException;
@@ -81,8 +82,12 @@ public class RecoverPasswordActivity extends BaseActivity {
             UiUtils.show("输入不能为空");
             return false;
         }
-        if (IDCardStr.length() != 18) {
+        if (!IDCardUtils.isIDNumber(IDCardStr)) {
             UiUtils.show("身份证号格式不正确");
+            return false;
+        }
+        if (!IDCardUtils.isUnifiedCreditCode(institutionNumberStr)) {
+            UiUtils.show("机构编号不正确");
             return false;
         }
         if (!TextUtils.equals(passwdStr, passwd1Str)) {

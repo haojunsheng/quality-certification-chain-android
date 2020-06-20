@@ -4,8 +4,6 @@
     <string name="myToolbarTextView">我的</string>
     <string name="netWorkError">网络超时，请重试</string>
     <string name="userNotFound">用户名不存在或者未审核，请重试！</string>
-    <string name="userNotPass">该用户未审核通过.</string>
-    <string name="adminMiss">请补充管理员信息.</string>
     <string name="userOrPassError">密码或用户名错误！</string>
     <string name="loginSuccess">恭喜您，登陆成功</string>
     <string name="registerSuccess">恭喜您，注册成功</string>

@@ -101,6 +101,8 @@
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test:rules:1.0.1@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test:runner:1.0.1@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test.espresso:espresso-idling-resource:3.0.1@aar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:./app/lib/zxing.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:./app/lib/ocr-sdk.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.okhttp3:logging-interceptor:3.1.2@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.okhttp3:okhttp:3.10.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.okio:okio:1.14.0@jar" level="project" />
@@ -119,8 +121,9 @@
     <orderEntry type="library" name="Gradle: com.android.support:appcompat-v7:25.3.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support.constraint:constraint-layout:1.0.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.tencent.bugly:crashreport_upgrade:1.4.5@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.tencent.bugly:nativecrashreport:3.7.1@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.tencent.bugly:nativecrashreport:3.7.3@aar" level="project" />
     <orderEntry type="library" name="Gradle: id.zelory:compressor:2.1.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.rmtheis:tess-two:9.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:animated-vector-drawable:25.3.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-vector-drawable:25.3.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-v4:25.3.0@aar" level="project" />

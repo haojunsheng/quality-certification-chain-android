@@ -51,6 +51,24 @@
                 android:textSize="20dp" />
 
             <Button
+                android:id="@+id/img_ocr_queryCerts"
+                android:layout_width="320dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/buttonshape"
+                android:text="图片输入"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/qr_code_queryCerts"
+                android:layout_width="320dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/buttonshape"
+                android:text="二维码扫描"
+                android:textSize="20dp" />
+
+            <Button
                 android:id="@+id/queryCerts"
                 android:layout_width="320dp"
                 android:layout_height="50dp"

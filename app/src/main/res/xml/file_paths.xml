@@ -14,7 +14,7 @@
 
     <external-path
         name="external"
-        path="Lingyun_chain/" />
+        path="qualityCertification/" />
 
     <external-files-path
         name="external_file_path"

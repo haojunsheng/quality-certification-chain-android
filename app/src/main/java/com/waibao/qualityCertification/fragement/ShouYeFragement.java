@@ -19,6 +19,7 @@ import android.widget.ListView;
 import com.waibao.qualityCertification.R;
 import com.waibao.qualityCertification.activity.DataReview;
 import com.waibao.qualityCertification.activity.DataUpload;
+import com.waibao.qualityCertification.activity.InstitutionReview;
 import com.waibao.qualityCertification.activity.LoginActivity;
 import com.waibao.qualityCertification.activity.PlatformMonitor;
 import com.waibao.qualityCertification.activity.QueryCertificate;
@@ -203,16 +204,23 @@ public class ShouYeFragement extends BaseFragement implements AdapterView.OnItem
                 }
                 break;
             case 1:
-                startActivity(new Intent(getActivity(), QueryCertificate.class));//查询证书
+                if (TextUtils.equals(usertype, "3")) {
+                    startActivity(new Intent(getActivity(), InstitutionReview.class));//机构管理
+                } else {
+                    UiUtils.show("对不起，您无权限进行此项操作。");
+                }
                 break;
             case 2:
+                startActivity(new Intent(getActivity(), QueryCertificate.class));//查询证书
+                break;
+            case 3:
                 if (TextUtils.equals(usertype, "2")) {
                     startActivity(new Intent(getActivity(), DataReview.class));//数据审核
                 } else {
                     UiUtils.show("对不起，您无权限进行此项操作。");
                 }
                 break;
-            case 3:
+            case 4:
                 if (TextUtils.equals(usertype, "1")) {
                     startActivity(new Intent(getActivity(), DataUpload.class));//数据上传
                 } else {

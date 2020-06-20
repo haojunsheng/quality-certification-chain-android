@@ -21,7 +21,7 @@ public class MyHomeListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 5;
+        return 6;
     }
 
     @Override
@@ -52,12 +52,15 @@ public class MyHomeListAdapter extends BaseAdapter {
                 holder.tv_name.setText("用户审核");
                 break;
             case 1:
-                holder.tv_name.setText("证书查询");
+                holder.tv_name.setText("机构管理");
                 break;
             case 2:
-                holder.tv_name.setText("数据审核");
+                holder.tv_name.setText("证书查询");
                 break;
             case 3:
+                holder.tv_name.setText("数据审核");
+                break;
+            case 4:
                 holder.tv_name.setText("数据上传");
                 break;
             default:

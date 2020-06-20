@@ -34,67 +34,150 @@
         android:id="@+id/query_certificate_grid1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
-        android:gravity="center"
-        android:scaleType="centerInside"
-        android:numColumns="5"
         android:adjustViewBounds="true"
+        android:gravity="center"
+        android:numColumns="5"
+        android:scaleType="centerInside"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/query_certificate_linear"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
-
-        <EditText
-            android:id="@+id/query_certificate_num_Edt"
+        <LinearLayout
+            android:id="@+id/query_certificate_linear"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:gravity="center"
-            android:hint="证书编号"
-            android:textColorHint="#B7B7B7"
-            android:textSize="20dp" />
-
-        <EditText
-            android:id="@+id/query_certificate_unitID_Edt"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:gravity="center"
-            android:hint="营业执照编号"
-            android:textColorHint="#B7B7B7"
-            android:textSize="20dp" />
-
-        <Button
-            android:id="@+id/query_certificate_Btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/buttonshape"
-            android:text="查询"
-            android:textColor="#FFFFFF" />
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <GridView
-            android:id="@+id/query_certificate_grid2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:adjustViewBounds="true"
-            android:numColumns="2" />
-    </LinearLayout>
 
+            <EditText
+                android:id="@+id/query_certificate_num_Edt"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:hint="证书编号"
+                android:textColorHint="#B7B7B7"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/query_certificate_unitID_Edt"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:hint="营业执照编号"
+                android:textColorHint="#B7B7B7"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/qr_code_query_certificate_Btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/buttonshape"
+                android:text="二维码输入"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/img_ocr_query_certificate_Btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/buttonshape"
+                android:text="图片输入"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/query_certificate_Btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/buttonshape"
+                android:text="查询"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/query_certificate_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="证书信息"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                android:textColor="@color/main_hue" />
+
+            <com.waibao.qualityCertification.view.MyGridView
+                android:id="@+id/query_certificate_grid2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:numColumns="2" />
+
+            <TextView
+                android:id="@+id/query_certificate_text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="点击追溯检测数据"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/main_hue"
+                android:visibility="gone" />
+
+            <com.waibao.qualityCertification.view.MyGridView
+                android:id="@+id/query_certificate_grid3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:numColumns="2"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/query_certificate_text4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="点击进行追溯试运行数据"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/main_hue"
+                android:visibility="gone" />
+
+            <com.waibao.qualityCertification.view.MyGridView
+                android:id="@+id/query_certificate_grid4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:numColumns="2"
+                android:visibility="gone" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginBottom="20dp"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

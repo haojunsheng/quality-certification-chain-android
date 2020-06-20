@@ -52,6 +52,30 @@
                     android:layout_gravity="center"
                     android:gravity="center" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/data_upload_qrCode_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp"
+                android:background="#FF3030"
+                android:visibility="gone"
+                android:text="二维码输入"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/data_upload_ocr_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="#FF3030"
+                android:text="图片输入"
+                android:visibility="gone"
+                android:textColor="#FFFFFF" />
             <!--检测数据上传-->
             <LinearLayout
                 android:id="@+id/data_upload_jiance_line"

@@ -130,6 +130,18 @@ public class BaseAsyTask extends AsyncTask<String, String, String> {
                 URL = URLConstants.ServerURL + URLConstants.WebPort + URLConstants.REV_LIST_URL;
                 dialogInfo = "待审核用户列表加载中，请稍候...";
                 break;
+            case "InstitutionReview":
+                session = params[0];
+                URL = URLConstants.ServerURL + URLConstants.WebPort + URLConstants.INSTITUTION_INFO_URL;
+                dialogInfo = "机构查询中，请稍候...";
+                break;
+            case "UpdateInstitutionStatusTask":
+                builder = new FormBody.Builder();
+                builder.add("institution_number", params[0]);
+                builder.add("isInvalid", params[1]);
+                URL = URLConstants.ServerURL + URLConstants.WebPort + URLConstants.UPDATE_INSTITUTION_STATUS_URL;
+                dialogInfo = "变更机构状态中，请稍候...";
+                break;
             case "ReviewSuccessTask":
                 session = params[0];
                 URL = URLConstants.ServerURL + URLConstants.WebPort + URLConstants.REVIEW_SUCCESS_URL + params[1];
@@ -239,6 +251,7 @@ public class BaseAsyTask extends AsyncTask<String, String, String> {
             case "UserTokenTask"://获取区块链的用户token
             case "UpdatePasswordTask"://更新密码
             case "DataDetailsTask"://获取详细审核数据
+            case "UpdateInstitutionStatusTask":
                 request = new Request.Builder()
                         .url(URL)
                         .post(builder.build())
@@ -271,6 +284,7 @@ public class BaseAsyTask extends AsyncTask<String, String, String> {
             case "ReviewFailTask":
             case "GetUnitUserTask":
             case "GetUploadListTask":
+            case "InstitutionReview":
                 request = new Request.Builder()
                         .header("Authorization", "Bearer " + token)
                         .header("cookie", session)
