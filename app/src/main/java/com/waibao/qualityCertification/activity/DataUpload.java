@@ -252,6 +252,7 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
                 data_upload_document_audit_line.setVisibility(View.GONE);
                 data_upload_certificate_data_line.setVisibility(View.GONE);
                 data_upload_site_audit_line.setVisibility(View.GONE);
+                permission = false;
                 if (pos1 == 0) {
                     dataAdapter = new ArrayAdapter<String>(DataUpload.this, android.R.layout.simple_spinner_item, data[0]);
                     if (TextUtils.equals(unittype, "1")) {
@@ -262,9 +263,6 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
                 } else {
                     dataAdapter = new ArrayAdapter<String>(DataUpload.this, android.R.layout.simple_spinner_item, data[1]);
                     if (TextUtils.equals(unittype, "2")) {
-                        data_upload_jiance_line.setVisibility(View.VISIBLE);
-                        data_upload_jiance_postPersonID.setText(postPersonID);
-                        data_upload_jiance_postPersonName.setText(postPersonName);
                         permission = true;
                     } else {
                         UiUtils.show("对不起，您无权限进行此项操作。请切换到其他项。");
@@ -281,35 +279,44 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
                             data_upload_document_audit_line.setVisibility(View.GONE);
                             data_upload_certificate_data_line.setVisibility(View.GONE);
                             data_upload_site_audit_line.setVisibility(View.GONE);
+                            data_upload_qrCode_btn.setVisibility(View.GONE);
+                            data_upload_ocr_btn.setVisibility(View.GONE);
                             tempPos1 = pos1;
                             tempPos2 = pos2;
                             if (pos1 == 0) {
-                                data_upload_qrCode_btn.setVisibility(View.GONE);
-                                data_upload_ocr_btn.setVisibility(View.GONE);
-                                if (pos2 == 0) {
-                                    data_upload_certificate_application_line.setVisibility(View.VISIBLE);
-                                    data_upload_certificate_application_operatorID.setText(postPersonID);
-                                    data_upload_certificate_application_operatorName.setText(postPersonName);
-                                } else if (pos2 == 1) {
-                                    data_upload_document_audit_line.setVisibility(View.VISIBLE);
-                                    data_upload_document_audit_postPersonID.setText(postPersonID);
-                                    data_upload_document_audit_postPersonName.setText(postPersonName);
-                                } else if (pos2 == 2) {
-                                    data_upload_site_audit_line.setVisibility(View.VISIBLE);
-                                    data_upload_site_audit_postPersonID.setText(postPersonID);
-                                    data_upload_site_audit_postPersonName.setText(postPersonName);
-                                } else {
-                                    data_upload_qrCode_btn.setVisibility(View.VISIBLE);
-                                    data_upload_ocr_btn.setVisibility(View.VISIBLE);
-                                    data_upload_certificate_data_line.setVisibility(View.VISIBLE);
-                                    data_upload_certificate_data_postPersonID.setText(postPersonID);
-                                    data_upload_certificate_data_postPersonName.setText(postPersonName);
+                                if (permission == true) {
+                                    data_upload_qrCode_btn.setVisibility(View.GONE);
+                                    data_upload_ocr_btn.setVisibility(View.GONE);
+                                    if (pos2 == 0) {
+                                        data_upload_certificate_application_line.setVisibility(View.VISIBLE);
+                                        data_upload_certificate_application_operatorID.setText(postPersonID);
+                                        data_upload_certificate_application_operatorName.setText(postPersonName);
+                                    } else if (pos2 == 1) {
+                                        data_upload_document_audit_line.setVisibility(View.VISIBLE);
+                                        data_upload_document_audit_postPersonID.setText(postPersonID);
+                                        data_upload_document_audit_postPersonName.setText(postPersonName);
+                                    } else if (pos2 == 2) {
+                                        data_upload_site_audit_line.setVisibility(View.VISIBLE);
+                                        data_upload_site_audit_postPersonID.setText(postPersonID);
+                                        data_upload_site_audit_postPersonName.setText(postPersonName);
+                                    } else {
+                                        data_upload_qrCode_btn.setVisibility(View.VISIBLE);
+                                        data_upload_ocr_btn.setVisibility(View.VISIBLE);
+                                        data_upload_certificate_data_line.setVisibility(View.VISIBLE);
+                                        data_upload_certificate_data_postPersonID.setText(postPersonID);
+                                        data_upload_certificate_data_postPersonName.setText(postPersonName);
+                                    }
                                 }
                             } else {
-                                if (pos2 == 0) {
-                                    data_upload_jiance_testTime_text.setText("检测时间:");
-                                } else {
-                                    data_upload_jiance_testTime_text.setText("试运行时间:");
+                                if (permission == true) {
+                                    data_upload_jiance_line.setVisibility(View.VISIBLE);
+                                    data_upload_jiance_postPersonID.setText(postPersonID);
+                                    data_upload_jiance_postPersonName.setText(postPersonName);
+                                    if (pos2 == 0) {
+                                        data_upload_jiance_testTime_text.setText("检测时间:");
+                                    } else {
+                                        data_upload_jiance_testTime_text.setText("试运行时间:");
+                                    }
                                 }
                             }
 
@@ -873,23 +880,20 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
                         try {
                             JSONObject jsonObject = new JSONObject(content);
                             int count = jsonObject.getInt("words_result_num");
-                            if (count == 2) {
+                            for (int i = 0; i < count; ++i) {
                                 JSONArray jsonArray = jsonObject.getJSONArray("words_result");
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(0);
-                                String firMidStr = jsonObject1.getString("words");
-                                JSONObject jsonObject2 = jsonArray.getJSONObject(1);
-                                String secMidStr = jsonObject2.getString("words");
-                                data_upload_certificate_data_certificateIDStr = firMidStr.substring(firMidStr.indexOf(":") + 1).trim();
-                                data_upload_certificate_data_unitIDStr = secMidStr.substring(secMidStr.indexOf(":") + 1).trim();//出厂日期
-                                if (TextUtils.isEmpty(data_upload_certificate_data_certificateIDStr) || TextUtils.isEmpty(data_upload_certificate_data_unitIDStr)) {
-                                    UiUtils.show("非法图片，请重试。");
+                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                String str = jsonObject1.getString("words");
+                                if (str.contains("证书编号")) {
+                                    data_upload_certificate_data_certificateIDStr = str.substring(str.indexOf(":") + 1).trim().toUpperCase();
+                                    break;
                                 }
-                                data_upload_certificate_data_certificateID.setText(data_upload_certificate_data_certificateIDStr);
-                                data_upload_certificate_data_unitID.setText(data_upload_certificate_data_unitIDStr);
-                                UiUtils.show("扫描成功");
-                            } else {
+                            }
+                            if (data_upload_certificate_data_certificateIDStr.isEmpty()) {
                                 UiUtils.show("非法图片，请重试。");
                             }
+                            data_upload_certificate_data_certificateID.setText(data_upload_certificate_data_certificateIDStr);
+                            UiUtils.show("扫描成功");
                         } catch (JSONException e) {
                             e.printStackTrace();
                             UiUtils.show("非法图片，请重试。");

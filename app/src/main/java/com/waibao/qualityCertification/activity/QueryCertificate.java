@@ -228,20 +228,17 @@ public class QueryCertificate extends BaseActivity {
                         try {
                             JSONObject jsonObject = new JSONObject(content);
                             int count = jsonObject.getInt("words_result_num");
-                            if (count == 2) {
+                            for (int i = 0; i < count; ++i) {
                                 JSONArray jsonArray = jsonObject.getJSONArray("words_result");
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(0);
-                                String firMidStr = jsonObject1.getString("words");
-                                JSONObject jsonObject2 = jsonArray.getJSONObject(1);
-                                String secMidStr = jsonObject2.getString("words");
-                                query_certificate_num_Str = firMidStr.substring(firMidStr.indexOf(":") + 1).trim();
-                                query_certificate_unitID_Str = secMidStr.substring(secMidStr.indexOf(":") + 1).trim();
-                                if (TextUtils.isEmpty(query_certificate_num_Str) || TextUtils.isEmpty(query_certificate_unitID_Str)) {
-                                    UiUtils.show("非法图片，请重试。");
+                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                String str = jsonObject1.getString("words");
+                                if (str.contains("证书编号")) {
+                                    query_certificate_num_Str = str.substring(str.indexOf(":") + 1).trim().toUpperCase();
+                                    query_certificate_num_Edt.setText(query_certificate_num_Str);
+                                    break;
                                 }
-                                query_certificate_num_Edt.setText(query_certificate_num_Str);
-                                query_certificate_unitID_Edt.setText(query_certificate_unitID_Str);
-                            } else {
+                            }
+                            if (TextUtils.isEmpty(query_certificate_num_Str)) {
                                 UiUtils.show("非法图片，请重试。");
                             }
                         } catch (JSONException e) {

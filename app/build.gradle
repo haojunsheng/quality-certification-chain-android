@@ -1,10 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'bugly'
-bugly {
-    appId = '<dc8353da26>' // 注册时分配的App ID
-    appKey = '<5116747a-d8a9-47bd-a951-0cbfe76f336f>' // 注册时分配的App Key
-    debug = true
-}
 android {
     defaultConfig {
         applicationId "com.waibao.qualityCertification"
