@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="quality-certification-chain-android/app" />
-      <module fileurl="file://$PROJECT_DIR$/github-quality-certification-chain-android.iml" filepath="$PROJECT_DIR$/github-quality-certification-chain-android.iml" group="quality-certification-chain-android" />
-      <module fileurl="file://$PROJECT_DIR$/ocr_ui/ocr_ui.iml" filepath="$PROJECT_DIR$/ocr_ui/ocr_ui.iml" group="quality-certification-chain-android/ocr_ui" />
-      <module fileurl="file://$PROJECT_DIR$/quality-certification-chain-android.iml" filepath="$PROJECT_DIR$/quality-certification-chain-android.iml" group="quality-certification-chain-android" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/quality-certification-chain-android.iml" filepath="$PROJECT_DIR$/.idea/modules/quality-certification-chain-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/quality-certification-chain-android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/quality-certification-chain-android.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ocr_ui/quality-certification-chain-android.ocr_ui.iml" filepath="$PROJECT_DIR$/.idea/modules/ocr_ui/quality-certification-chain-android.ocr_ui.iml" />
     </modules>
   </component>
 </project>

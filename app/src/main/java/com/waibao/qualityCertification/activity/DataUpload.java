@@ -879,9 +879,10 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
                         Log.e("ocrRes", content + "");
                         try {
                             JSONObject jsonObject = new JSONObject(content);
+                            JSONArray jsonArray = null;
                             int count = jsonObject.getInt("words_result_num");
                             for (int i = 0; i < count; ++i) {
-                                JSONArray jsonArray = jsonObject.getJSONArray("words_result");
+                                jsonArray = jsonObject.getJSONArray("words_result");
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                 String str = jsonObject1.getString("words");
                                 if (str.contains("证书编号")) {
@@ -889,10 +890,24 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
                                     break;
                                 }
                             }
+                            JSONObject jsonObjectTemp = jsonArray.getJSONObject(8);
+                            jsonObjectTemp = jsonArray.getJSONObject(8);
+                            String stringTemp = jsonObjectTemp.getString("words").trim();
+                            if (stringTemp.contains("V")) {
+                                data_upload_certificate_data_unitNameStr = stringTemp.substring(0,stringTemp.indexOf("V")).trim();
+                            } else {
+                                data_upload_certificate_data_unitNameStr = stringTemp.trim();
+                            }
+
+                            jsonObjectTemp = jsonArray.getJSONObject(count - 4);
+                            stringTemp = jsonObjectTemp.getString("words").trim();
+                            data_upload_certificate_data_platformNameStr = stringTemp.trim();
                             if (data_upload_certificate_data_certificateIDStr.isEmpty()) {
                                 UiUtils.show("非法图片，请重试。");
                             }
                             data_upload_certificate_data_certificateID.setText(data_upload_certificate_data_certificateIDStr);
+                            data_upload_certificate_data_unitName.setText(data_upload_certificate_data_unitNameStr);
+                            data_upload_certificate_data_platformName.setText(data_upload_certificate_data_platformNameStr);
                             UiUtils.show("扫描成功");
                         } catch (JSONException e) {
                             e.printStackTrace();

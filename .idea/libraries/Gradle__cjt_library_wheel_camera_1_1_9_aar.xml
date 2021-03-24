@@ -1,10 +1,13 @@
 <component name="libraryTable">
   <library name="Gradle: cjt.library.wheel:camera:1.1.9@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7cda469ffbec9c4155ed990c376c1be6/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7cda469ffbec9c4155ed990c376c1be6/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d5495079ddca2b4a1902fadda7e17fd1/camera-1.1.9/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d5495079ddca2b4a1902fadda7e17fd1/camera-1.1.9/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d5495079ddca2b4a1902fadda7e17fd1/camera-1.1.9/res" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cjt.library.wheel/camera/1.1.9/864181635a851838f07fc321ff820dda3b9a8fd9/camera-1.1.9-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cjt.library.wheel/camera/1.1.9/b65b1227187ce8dec4a777d5459ace7a897f4eb8/camera-1.1.9-sources.jar!/" />
     </SOURCES>

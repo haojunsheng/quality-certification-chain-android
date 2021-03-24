@@ -160,7 +160,7 @@ public class PublicSearch extends BaseActivity {
                             if (!stringTemp.contains("证书编号")) {
                                 isVaild = false;
                             }
-                            certificateIdStr = stringTemp.substring(stringTemp.indexOf(":") + 1).trim();
+                            certificateIdStr = stringTemp.substring(stringTemp.indexOf(":") + 1).trim().toUpperCase();
 
                             jsonObjectTemp = jsonArray.getJSONObject(8);
                             stringTemp = jsonObjectTemp.getString("words").trim();
