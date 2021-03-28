@@ -63,9 +63,9 @@ public class RegisterActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int pos, long id) {
                 if (pos == 0) {
-                    usertypeStr = "0";
-                } else {
                     usertypeStr = "1";
+                } else {
+                    usertypeStr = "2";
                 }
             }
 

@@ -61,7 +61,11 @@ public class HomeCarouselAdapter extends PagerAdapter {
         TextView textViewTitle = (TextView) view.findViewById(R.id.viewpager_title);
         textViewTitle.setText(picDatas.get(position).getTitle());
         TextView textViewCount = (TextView) view.findViewById(R.id.viewpager_count);
-        textViewCount.setText("我们共为您找到了： " + picDatas.get(position).getCount() + info.get(position % 3));
+        if (position % 3 == 2) {
+            textViewCount.setText("我们共为您找到了： 7个区块链节点");
+        }else {
+            textViewCount.setText("我们共为您找到了： " + picDatas.get(position).getCount() + info.get(position % 3));
+        }
         container.addView(view);
         return view;
     }

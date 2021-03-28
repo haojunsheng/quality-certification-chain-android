@@ -223,7 +223,6 @@ public class QueryCertificate extends BaseActivity {
                     public void succeed(GeneralResult data) {
                         // 调用成功，返回GeneralResult对象
                         String content = OCRManagerUtil.getResult(data);
-                        UiUtils.show(content);
                         Log.e("ocrRes", content + "");
                         try {
                             JSONObject jsonObject = new JSONObject(content);
