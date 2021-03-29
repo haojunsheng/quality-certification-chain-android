@@ -181,7 +181,7 @@ public class ShouYeFragement extends BaseFragement implements AdapterView.OnItem
         picDatas.add(homeCarousel);
         homeCarousel = new HomeCarousel(R.mipmap.xrp, "节点状态监控", 0);
         picDatas.add(homeCarousel);
-        homeCarousel = new HomeCarousel(R.mipmap.btc, "节点在线人数", 0);
+        homeCarousel = new HomeCarousel(R.mipmap.btc, "区块高度", 0);
         picDatas.add(homeCarousel);
         initIndicator();
     }

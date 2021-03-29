@@ -256,7 +256,7 @@ public class QueryCertificate extends BaseActivity {
         } else if (resultCode == RESULT_RECTANGLE_CAMERA) {
             if (requestCode == OPEN_SCAN_QUERYCERITIFICATE) {
                 String resultStr = data.getStringExtra("resultString");
-                ToastUtils.showToast(QueryCertificate.this,resultStr);
+                ToastUtils.showToast(QueryCertificate.this, resultStr);
                 try {
                     int mid = resultStr.indexOf("营业执照编号：");
                     String firMidStr = resultStr.substring(0, mid).trim();
@@ -396,34 +396,75 @@ public class QueryCertificate extends BaseActivity {
                         conListData3.clear();
                         conListData4.clear();
                         //条件查询
-                        String pName = "";
                         JSONObject vobj = null;
                         String vobjJson = null;
                         // 代码中根本没检验type
 //                        if (!TextUtils.equals(tempJSONObject.optString("testDataUpload"), "null") && TextUtils.equals(type, "2")) {
                         if (!TextUtils.equals(tempJSONObject.optString("testDataUpload"), "null")) {
                             vobjJson = tempJSONObject.getJSONObject("testDataUpload").getString("baseData");
+                            if (isValid(vobjJson)){
+                                vobj = new JSONObject(vobjJson);
+                                conListData3.add("委托人单位编号");
+                                conListData3.add(tempJSONObject.optString("unitID"));
+                                conListData3.add("委托人单位名称");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("unitName")) ? "未找到" : vobj.optString("unitName"));
+                                conListData3.add("交易平台名称");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("platformName")) ? "未找到" : vobj.optString("platformName"));
+                                conListData3.add("交易平台版本");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("edition")) ? "未找到" : vobj.optString("edition"));
+                                conListData3.add("检测机构名称");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
+                                conListData3.add("检测报告结论");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
+                                conListData3.add("检测时间");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("testRunTime")) ? "未找到" : vobj.optString("testRunTime"));
+                                conListData3.add("检测人证件号码");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("testingPersonID")) ? "未找到" : vobj.optString("testingPersonID"));
+                                conListData3.add("检测人姓名");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("testingPersonName")) ? "未找到" : vobj.optString("testingPersonName"));
+                                conListData3.add("数据上传人证件号码");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("postPersonID")) ? "未找到" : vobj.optString("postPersonID"));
+                                conListData3.add("数据上传人证件姓名");
+                                conListData3.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
+                            }
                         }
                         if (!TextUtils.equals(tempJSONObject.optString("trialRunDataUpload"), "null")) {
                             vobjJson = tempJSONObject.getJSONObject("trialRunDataUpload").getString("baseData");
+                            if(isValid(vobjJson)){
+                                vobj = new JSONObject(vobjJson);
+                                conListData4.add("证书编号");
+                                conListData4.add(tempJSONObject.optString("certificateID"));
+                                conListData4.add("委托人单位编号");
+                                conListData4.add(tempJSONObject.optString("unitID"));
+                                conListData4.add("委托人单位名称");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("unitName")) ? "未找到" : vobj.optString("unitName"));
+                                conListData4.add("交易平台名称");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("platformName")) ? "未找到" : vobj.optString("platformName"));
+                                conListData4.add("交易平台版本");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("edition")) ? "未找到" : vobj.optString("edition"));
+                                conListData4.add("检测机构编号");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
+                                conListData4.add("检测机构名称");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
+                                conListData4.add("检测报告结论");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
+                                conListData4.add("试运行时间");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("testTime")) ? "未找到" : vobj.optString("testTime"));
+                                conListData4.add("检测人证件号码");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("testingPersonID")) ? "未找到" : vobj.optString("testingPersonID"));
+                                conListData4.add("检测人姓名");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("testingPersonName")) ? "未找到" : vobj.optString("testingPersonName"));
+                                conListData4.add("数据上传人证件号码");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("postPersonID")) ? "未找到" : vobj.optString("postPersonID"));
+                                conListData4.add("数据上传人证件姓名");
+                                conListData4.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
+                            }
 
                         }
                         if (!TextUtils.equals(tempJSONObject.optString("certUpload"), "null")) {
                             vobjJson = tempJSONObject.getJSONObject("certUpload").getString("baseData");
-                        }
-                        if (vobjJson != null) {
-                            vobj = new JSONObject(vobjJson);
-                            pName = vobj.optString("postPersonName");
-                        }
-                        int sign = 0;
-                        for (int j = 0; j < nameArr.size(); ++j) {
-                            if (TextUtils.equals(nameArr.get(j), pName)) {
-                                sign = 1;
-                                break;
-                            }
-                        }
-                        if (sign == 1 || TextUtils.equals(loginname, "admin1") || TextUtils.equals(loginname, "admin2") || TextUtils.equals(loginname, "admin3")) {
-                            if (!TextUtils.equals(tempJSONObject.optString("certUpload"), "null")) {
+                            if(isValid(vobjJson)){
+                                vobj = new JSONObject(vobjJson);
                                 conListData.add("证书编号");
                                 conListData.add(tempJSONObject.optString("certificateID"));
                                 conListData.add("获证企业单位编号");
@@ -460,58 +501,6 @@ public class QueryCertificate extends BaseActivity {
                                 conListData.add(TextUtils.isEmpty(vobj.optString("certificationName")) ? "未找到" : vobj.optString("certificationName"));
                                 conListData.add("提交人");
                                 conListData.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
-                            }
-                            if (!TextUtils.equals(tempJSONObject.optString("testDataUpload"), "null")) {
-                                conListData3.add("委托人单位编号");
-                                conListData3.add(tempJSONObject.optString("unitID"));
-                                conListData3.add("委托人单位名称");
-                                conListData3.add(TextUtils.isEmpty(vobj.optString("unitName")) ? "未找到" : vobj.optString("unitName"));
-                                conListData3.add("交易平台名称");
-                                conListData3.add(TextUtils.isEmpty(vobj.optString("platformName")) ? "未找到" : vobj.optString("platformName"));
-                                conListData3.add("交易平台版本");
-                                conListData3.add(TextUtils.isEmpty(vobj.optString("edition")) ? "未找到" : vobj.optString("edition"));
-                                conListData3.add("检测机构名称");
-                                conListData3.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
-                                conListData3.add("检测报告结论");
-                                conListData3.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
-                                conListData3.add("检测时间");
-                                conListData3.add(TextUtils.isEmpty(vobj.optString("testTime")) ? "未找到" : vobj.optString("testTime"));
-                                conListData3.add("检测人证件号码");
-                                conListData3.add(TextUtils.isEmpty(vobj.optString("testingPersonID")) ? "未找到" : vobj.optString("testingPersonID"));
-                                conListData3.add("检测人姓名");
-                                conListData3.add(TextUtils.isEmpty(vobj.optString("testingPersonName")) ? "未找到" : vobj.optString("testingPersonName"));
-                                conListData3.add("数据上传人证件号码");
-                                conListData3.add(TextUtils.isEmpty(vobj.optString("postPersonID")) ? "未找到" : vobj.optString("postPersonID"));
-                                conListData3.add("数据上传人证件姓名");
-                                conListData3.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
-                            }
-                            if (!TextUtils.equals(tempJSONObject.optString("trialRunDataUpload"), "null")) {
-                                conListData4.add("证书编号");
-                                conListData4.add(tempJSONObject.optString("certificateID"));
-                                conListData4.add("委托人单位编号");
-                                conListData4.add(tempJSONObject.optString("unitID"));
-                                conListData4.add("委托人单位名称");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("unitName")) ? "未找到" : vobj.optString("unitName"));
-                                conListData4.add("交易平台名称");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("platformName")) ? "未找到" : vobj.optString("platformName"));
-                                conListData4.add("交易平台版本");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("edition")) ? "未找到" : vobj.optString("edition"));
-                                conListData4.add("检测机构编号");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
-                                conListData4.add("检测机构名称");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("testUnitName")) ? "未找到" : vobj.optString("testUnitName"));
-                                conListData4.add("检测报告结论");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
-                                conListData4.add("试运行时间");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("testTime")) ? "未找到" : vobj.optString("testTime"));
-                                conListData4.add("检测人证件号码");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("testingPersonID")) ? "未找到" : vobj.optString("testingPersonID"));
-                                conListData4.add("检测人姓名");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("testingPersonName")) ? "未找到" : vobj.optString("testingPersonName"));
-                                conListData4.add("数据上传人证件号码");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("postPersonID")) ? "未找到" : vobj.optString("postPersonID"));
-                                conListData4.add("数据上传人证件姓名");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
                             }
                         }
                     }
@@ -550,6 +539,30 @@ public class QueryCertificate extends BaseActivity {
             } else {
                 UiUtils.show(getString(R.string.netWorkError));
             }
+        }
+
+        boolean isValid(String vobjJson) {
+            String pName = "";
+            int sign = 0;
+            if (vobjJson != null) {
+                JSONObject vobj = null;
+                try {
+                    vobj = new JSONObject(vobjJson);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                pName = vobj.optString("postPersonName");
+            }
+            for (int j = 0; j < nameArr.size(); ++j) {
+                if (TextUtils.equals(nameArr.get(j), pName)) {
+                    sign = 1;
+                    break;
+                }
+            }
+            if (sign == 1 || TextUtils.equals(loginname, "admin1") || TextUtils.equals(loginname, "admin2") || TextUtils.equals(loginname, "admin3")) {
+                return true;
+            }
+            return false;
         }
     }
 

@@ -886,22 +886,27 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                 String str = jsonObject1.getString("words");
                                 if (str.contains("证书编号")) {
-                                    data_upload_certificate_data_certificateIDStr = str.substring(str.indexOf(":") + 1).trim().toUpperCase();
+                                    String[] strArr = str.split("-");
+                                    StringBuilder stringBuilder = new StringBuilder("CCRC-ERS");
+                                    for (int j = 2; j < strArr.length; ++j) {
+                                        stringBuilder.append("-" + strArr[j]);
+                                    }
+                                    data_upload_certificate_data_certificateIDStr = stringBuilder.toString();
+//                                    data_upload_certificate_data_certificateIDStr = str.substring(str.indexOf(":") + 1).trim().toUpperCase();
                                     break;
                                 }
                             }
-                            JSONObject jsonObjectTemp = jsonArray.getJSONObject(8);
-                            jsonObjectTemp = jsonArray.getJSONObject(8);
-                            String stringTemp = jsonObjectTemp.getString("words").trim();
-                            if (stringTemp.contains("V")) {
-                                data_upload_certificate_data_unitNameStr = stringTemp.substring(0,stringTemp.indexOf("V")).trim();
-                            } else {
-                                data_upload_certificate_data_unitNameStr = stringTemp.trim();
-                            }
+                            JSONObject jsonObjectTemp = jsonArray.getJSONObject(count - 4);
+                            String stringTemp = jsonObjectTemp.getString("words").trim().toUpperCase();
+                            data_upload_certificate_data_unitNameStr = stringTemp.trim();
 
-                            jsonObjectTemp = jsonArray.getJSONObject(count - 4);
-                            stringTemp = jsonObjectTemp.getString("words").trim();
-                            data_upload_certificate_data_platformNameStr = stringTemp.trim();
+                            jsonObjectTemp = jsonArray.getJSONObject(8);
+                            stringTemp = jsonObjectTemp.getString("words").trim().toUpperCase();
+                            if (stringTemp.contains("V")) {
+                                data_upload_certificate_data_platformNameStr = stringTemp.substring(0, stringTemp.indexOf("V")).trim();
+                            } else {
+                                data_upload_certificate_data_platformNameStr = stringTemp.trim();
+                            }
                             if (data_upload_certificate_data_certificateIDStr.isEmpty()) {
                                 UiUtils.show("非法图片，请重试。");
                             }

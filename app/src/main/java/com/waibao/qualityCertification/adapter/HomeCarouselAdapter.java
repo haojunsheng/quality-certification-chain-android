@@ -35,7 +35,7 @@ public class HomeCarouselAdapter extends PagerAdapter {
         colors.add("#4a9fec");
         colors.add("#f19b59");
         info.add(" 条交易信息");
-        info.add(" 个在线节点");
+        info.add(" 个区块高度");
         info.add(" 名在线人数");
     }
 
