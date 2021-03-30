@@ -417,7 +417,13 @@ public class QueryCertificate extends BaseActivity {
                                 conListData3.add("检测报告结论");
                                 conListData3.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
                                 conListData3.add("检测时间");
-                                conListData3.add(TextUtils.isEmpty(vobj.optString("testRunTime")) ? "未找到" : vobj.optString("testRunTime"));
+                                String timeTemp="未找到";
+                                if(!TextUtils.isEmpty(vobj.optString("testRunTime"))){
+                                    timeTemp=vobj.optString("testRunTime");
+                                }else if(!TextUtils.isEmpty(vobj.optString("testTime"))){
+                                    timeTemp=vobj.optString("testTime");
+                                }
+                                conListData3.add(timeTemp);
                                 conListData3.add("检测人证件号码");
                                 conListData3.add(TextUtils.isEmpty(vobj.optString("testingPersonID")) ? "未找到" : vobj.optString("testingPersonID"));
                                 conListData3.add("检测人姓名");
@@ -449,7 +455,13 @@ public class QueryCertificate extends BaseActivity {
                                 conListData4.add("检测报告结论");
                                 conListData4.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
                                 conListData4.add("试运行时间");
-                                conListData4.add(TextUtils.isEmpty(vobj.optString("testTime")) ? "未找到" : vobj.optString("testTime"));
+                                String timeTemp="未找到";
+                                if(!TextUtils.isEmpty(vobj.optString("testRunTime"))){
+                                    timeTemp=vobj.optString("testRunTime");
+                                }else if(!TextUtils.isEmpty(vobj.optString("testTime"))){
+                                    timeTemp=vobj.optString("testTime");
+                                }
+                                conListData4.add(timeTemp);
                                 conListData4.add("检测人证件号码");
                                 conListData4.add(TextUtils.isEmpty(vobj.optString("testingPersonID")) ? "未找到" : vobj.optString("testingPersonID"));
                                 conListData4.add("检测人姓名");

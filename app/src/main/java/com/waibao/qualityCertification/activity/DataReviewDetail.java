@@ -338,8 +338,10 @@ public class DataReviewDetail extends BaseActivity implements View.OnClickListen
                         basedata.put("conclusion", conclusion);
                         if (pos2 == 0) {
                             basedata.put("testTime", testTime);
+                            data.put("fcn", "testDataUpload");
                         } else {
                             basedata.put("testRunTime", testTime);
+                            data.put("fcn", "trialRunDataUpload");
                         }
                         basedata.put("testingPersonID", testingPersonID);
                         basedata.put("testingPersonName", testingPersonName);
@@ -348,7 +350,6 @@ public class DataReviewDetail extends BaseActivity implements View.OnClickListen
                         peersJSONArray = new JSONArray();
                         peersJSONArray.put("peer0.org1.example.com").put("peer0.org2.example.com").put("peer0.org3.example.com");
                         data.put("peers", peersJSONArray);
-                        data.put("fcn", "testDataUpload");
                         argsJSONArray = new JSONArray();
                         argsJSONArray.put(certificateID).put(unitID).put(basedata.toString()).put("");
                         data.put("args", argsJSONArray);
