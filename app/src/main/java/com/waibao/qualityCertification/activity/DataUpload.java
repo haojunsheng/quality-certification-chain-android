@@ -735,6 +735,7 @@ public class DataUpload extends BaseActivity implements View.OnClickListener {
                         JSONArray argsJSONArray = new JSONArray();
                         argsJSONArray.put(basedata.toString()).put("");
                         data.put("args", argsJSONArray);
+                        data.put("certificateID", data_upload_document_audit_certificationUnitIDStr);
                         data.put("unitID", data_upload_site_audit_unitIDStr);
                         data.put("postPersonName", postPersonName);
                         data.put("postPersonID", postPersonID);
