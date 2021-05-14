@@ -59,6 +59,7 @@ public class HomeCarouselAdapter extends PagerAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.viewpager_image);
         Glide.with(context).load(picDatas.get(position).getImageView()).into(imageView);
         TextView textViewTitle = (TextView) view.findViewById(R.id.viewpager_title);
+        textViewTitle.setTextSize(20);
         textViewTitle.setText(picDatas.get(position).getTitle());
         TextView textViewCount = (TextView) view.findViewById(R.id.viewpager_count);
         if (position % 3 == 2) {

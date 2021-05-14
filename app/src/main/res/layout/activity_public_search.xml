@@ -18,7 +18,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="150dp"
                 android:text="公众查询"
-                android:textSize="30dp" />
+                android:textSize="35dp" />
 
             <EditText
                 android:id="@+id/certificateId"
@@ -28,7 +28,7 @@
                 android:gravity="center"
                 android:hint="证书编号"
                 android:singleLine="true"
-                android:textSize="20dp" />
+                android:textSize="25dp" />
 
             <EditText
                 android:id="@+id/unitName"
@@ -38,7 +38,7 @@
                 android:gravity="center"
                 android:hint="获证企业单位名称"
                 android:singleLine="true"
-                android:textSize="20dp" />
+                android:textSize="25dp" />
 
             <EditText
                 android:id="@+id/platformName"
@@ -48,7 +48,7 @@
                 android:gravity="center"
                 android:hint="交易平台名称"
                 android:singleLine="true"
-                android:textSize="20dp" />
+                android:textSize="25dp" />
 
             <Button
                 android:id="@+id/img_ocr_queryCerts"
@@ -57,7 +57,7 @@
                 android:layout_marginTop="30dp"
                 android:background="@drawable/buttonshape"
                 android:text="图片输入"
-                android:textSize="20dp" />
+                android:textSize="25dp" />
 
             <Button
                 android:id="@+id/qr_code_queryCerts"
@@ -66,7 +66,7 @@
                 android:layout_marginTop="30dp"
                 android:background="@drawable/buttonshape"
                 android:text="二维码扫描"
-                android:textSize="20dp" />
+                android:textSize="25dp" />
 
             <Button
                 android:id="@+id/queryCerts"
@@ -75,7 +75,7 @@
                 android:layout_marginTop="30dp"
                 android:background="@drawable/buttonshape"
                 android:text="点击验证"
-                android:textSize="20dp" />
+                android:textSize="25dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
                 android:layout_marginTop="20dp"
                 android:text="公示信息"
                 android:textColor="@color/main_hue"
-                android:textSize="20dp" />
+                android:textSize="25dp" />
 
             <LinearLayout
                 android:id="@+id/certificationClassLine"
@@ -103,6 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
+                    android:textSize="20dp"
                     android:text="认证级别:" />
 
                 <TextView
@@ -133,6 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
+                    android:textSize="20dp"
                     android:text="有效期至:" />
 
                 <TextView
@@ -144,6 +146,7 @@
                     android:layout_marginRight="10dp"
                     android:gravity="center"
                     android:text=""
+                    android:textSize="20dp"
                     android:textColor="@color/main_hue" />
             </LinearLayout>
         </LinearLayout>
