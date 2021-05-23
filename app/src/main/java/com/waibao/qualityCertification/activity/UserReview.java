@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.waibao.qualityCertification.R;
 import com.waibao.qualityCertification.base.BaseActivity;
@@ -60,10 +61,11 @@ public class UserReview extends BaseActivity {
             usertype = sharedPreference.getString("usertype", "0");
             session = sharedPreference.getString("session", "0");
         }
-        user_review_adapter1 = new ArrayAdapter<String>(UserReview.this, android.R.layout.simple_list_item_1, okRevListData) {
+        user_review_adapter1 = new ArrayAdapter<String>(UserReview.this,R.layout.gridview_text , okRevListData) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                TextView textView;
                 // Return the GridView current item as a View
                 View view = super.getView(position, convertView, parent);
                 return GridViewUtils.getView(UserReview.this, view, okRevListData, position);
@@ -82,6 +84,8 @@ public class UserReview extends BaseActivity {
         user_review_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                TextView tv = (TextView)view;
+                tv.setTextSize(20);
                 user_review_grid1.setVisibility(View.GONE);
                 user_review_grid2.setVisibility(View.GONE);
                 if (TextUtils.equals(usertype, "3") && !TextUtils.equals(session, "0")) {

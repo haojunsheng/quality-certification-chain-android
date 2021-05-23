@@ -43,7 +43,7 @@ public class InstitutionReview extends BaseActivity {
 
     private void initView() {
         institution_review_grid = (GridView) findViewById(R.id.institution_review_grid);
-        institution_review_grid_adapter = new ArrayAdapter<String>(InstitutionReview.this, android.R.layout.simple_list_item_1, institutionReviewListData) {
+        institution_review_grid_adapter = new ArrayAdapter<String>(InstitutionReview.this, R.layout.gridview_text, institutionReviewListData) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

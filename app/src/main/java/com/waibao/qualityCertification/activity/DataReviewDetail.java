@@ -414,7 +414,13 @@ public class DataReviewDetail extends BaseActivity implements View.OnClickListen
                         peersJSONArray = new JSONArray();
                         peersJSONArray.put("peer0.org1.example.com").put("peer0.org2.example.com").put("peer0.org3.example.com");
                         data.put("peers", peersJSONArray);
-                        data.put("fcn", "docAudit");
+                        // 文件审核
+                        if(pos2==1){
+                            data.put("fcn", "docAudit");
+                            // 现场审核
+                        }else {
+                            data.put("fcn", "onsiteAudit");
+                        }
                         argsJSONArray = new JSONArray();
                         argsJSONArray.put(basedata.toString()).put("");
                         data.put("args", argsJSONArray);

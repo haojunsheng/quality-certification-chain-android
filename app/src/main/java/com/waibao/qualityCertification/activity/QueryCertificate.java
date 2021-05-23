@@ -55,6 +55,9 @@ public class QueryCertificate extends BaseActivity {
     private MyGridView query_certificate_grid2;
     private MyGridView query_certificate_grid3;
     private MyGridView query_certificate_grid4;
+    private MyGridView query_certificate_grid5;
+    private MyGridView query_certificate_grid6;
+    private MyGridView query_certificate_grid7;
     private LinearLayout query_certificate_linear;
     // 综合查询
     private ArrayList<String> mulQueryListData = new ArrayList<String>();
@@ -62,13 +65,22 @@ public class QueryCertificate extends BaseActivity {
     private ArrayList<String> conListData = new ArrayList<String>();
     private ArrayList<String> conListData3 = new ArrayList<String>();
     private ArrayList<String> conListData4 = new ArrayList<String>();
+    private ArrayList<String> conListData5 = new ArrayList<String>();
+    private ArrayList<String> conListData6 = new ArrayList<String>();
+    private ArrayList<String> conListData7 = new ArrayList<String>();
     private ArrayAdapter<String> mulQueryListAdapter;
     private ArrayAdapter<String> conQueryListAdapter;
     private ArrayAdapter<String> conQueryListAdapter3;
     private ArrayAdapter<String> conQueryListAdapter4;
+    private ArrayAdapter<String> conQueryListAdapter5;
+    private ArrayAdapter<String> conQueryListAdapter6;
+    private ArrayAdapter<String> conQueryListAdapter7;
     private TextView query_certificate_text2;
     private TextView query_certificate_text3;
     private TextView query_certificate_text4;
+    private TextView query_certificate_text5;
+    private TextView query_certificate_text6;
+    private TextView query_certificate_text7;
     private int position = 0;
     private String userToken = "";
     private String userSession = "";
@@ -98,6 +110,9 @@ public class QueryCertificate extends BaseActivity {
         query_certificate_grid2 = (MyGridView) findViewById(R.id.query_certificate_grid2);
         query_certificate_grid3 = (MyGridView) findViewById(R.id.query_certificate_grid3);
         query_certificate_grid4 = (MyGridView) findViewById(R.id.query_certificate_grid4);
+        query_certificate_grid5 = (MyGridView) findViewById(R.id.query_certificate_grid5);
+        query_certificate_grid6 = (MyGridView) findViewById(R.id.query_certificate_grid6);
+        query_certificate_grid7 = (MyGridView) findViewById(R.id.query_certificate_grid7);
         query_certificate_linear = (LinearLayout) findViewById(R.id.query_certificate_linear);
         query_certificate_Btn = (Button) findViewById(R.id.query_certificate_Btn);
         qr_code_query_certificate_Btn = (Button) findViewById(R.id.qr_code_query_certificate_Btn);
@@ -107,6 +122,9 @@ public class QueryCertificate extends BaseActivity {
         query_certificate_text2 = (TextView) findViewById(R.id.query_certificate_text2);
         query_certificate_text3 = (TextView) findViewById(R.id.query_certificate_text3);
         query_certificate_text4 = (TextView) findViewById(R.id.query_certificate_text4);
+        query_certificate_text5 = (TextView) findViewById(R.id.query_certificate_text5);
+        query_certificate_text6 = (TextView) findViewById(R.id.query_certificate_text6);
+        query_certificate_text7 = (TextView) findViewById(R.id.query_certificate_text7);
         if (sharedPreference != null) {
             userSession = sharedPreference.getString("session", "");
         }
@@ -146,10 +164,40 @@ public class QueryCertificate extends BaseActivity {
                 return GridViewUtils.getView(QueryCertificate.this, view, conListData4, position);
             }
         };
+        conQueryListAdapter5 = new ArrayAdapter<String>(QueryCertificate.this, android.R.layout.simple_list_item_1, conListData5) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                // Return the GridView current item as a View
+                View view = super.getView(position, convertView, parent);
+                return GridViewUtils.getView(QueryCertificate.this, view, conListData5, position);
+            }
+        };
+        conQueryListAdapter6 = new ArrayAdapter<String>(QueryCertificate.this, android.R.layout.simple_list_item_1, conListData6) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                // Return the GridView current item as a View
+                View view = super.getView(position, convertView, parent);
+                return GridViewUtils.getView(QueryCertificate.this, view, conListData6, position);
+            }
+        };
+        conQueryListAdapter7 = new ArrayAdapter<String>(QueryCertificate.this, android.R.layout.simple_list_item_1, conListData7) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                // Return the GridView current item as a View
+                View view = super.getView(position, convertView, parent);
+                return GridViewUtils.getView(QueryCertificate.this, view, conListData7, position);
+            }
+        };
         query_certificate_grid1.setAdapter(mulQueryListAdapter);
         query_certificate_grid2.setAdapter(conQueryListAdapter);
         query_certificate_grid3.setAdapter(conQueryListAdapter3);
         query_certificate_grid4.setAdapter(conQueryListAdapter4);
+        query_certificate_grid5.setAdapter(conQueryListAdapter5);
+        query_certificate_grid6.setAdapter(conQueryListAdapter6);
+        query_certificate_grid7.setAdapter(conQueryListAdapter7);
         query_certificate_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -395,6 +443,9 @@ public class QueryCertificate extends BaseActivity {
                         conListData.clear();
                         conListData3.clear();
                         conListData4.clear();
+                        conListData5.clear();
+                        conListData6.clear();
+                        conListData7.clear();
                         //条件查询
                         JSONObject vobj = null;
                         String vobjJson = null;
@@ -515,6 +566,95 @@ public class QueryCertificate extends BaseActivity {
                                 conListData.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
                             }
                         }
+                        // 证书申请
+                        if (!TextUtils.equals(tempJSONObject.optString("certApplication"), "null")) {
+                            vobjJson = tempJSONObject.getJSONObject("certApplication").getString("baseData");
+                            if(isValid(vobjJson)){
+                                vobj = new JSONObject(vobjJson);
+                                conListData5.add("获证企业单位编号");
+                                conListData5.add(tempJSONObject.optString("unitID"));
+                                conListData5.add("获证企业单位名称");
+                                conListData5.add(TextUtils.isEmpty(vobj.optString("unitName")) ? "未找到" : vobj.optString("unitName"));
+                                conListData5.add("交易平台名称");
+                                conListData5.add(TextUtils.isEmpty(vobj.optString("platformName")) ? "未找到" : vobj.optString("platformName"));
+                                conListData5.add("交易平台版本");
+                                conListData5.add(TextUtils.isEmpty(vobj.optString("edition")) ? "未找到" : vobj.optString("edition"));
+                                conListData5.add("部署场所");
+                                conListData5.add(TextUtils.isEmpty(vobj.optString("deployPlace")) ? "未找到" : vobj.optString("deployPlace"));
+                                conListData5.add("运营场所");
+                                conListData5.add(TextUtils.isEmpty(vobj.optString("runPlace")) ? "未找到" : vobj.optString("runPlace"));
+                                conListData5.add("运营情况");
+                                conListData5.add(TextUtils.isEmpty(vobj.optString("runState")) ? "未找到" : vobj.optString("runState"));
+                                conListData5.add("申请时间");
+                                conListData5.add(TextUtils.isEmpty(vobj.optString("applyTime")) ? "未找到" : vobj.optString("applyTime"));
+                                conListData5.add("经办人证件号码");
+                                conListData5.add(TextUtils.isEmpty(vobj.optString("operatorID")) ? "未找到" : vobj.optString("operatorID"));
+                                conListData5.add("经办人姓名");
+                                conListData5.add(TextUtils.isEmpty(vobj.optString("operatorName")) ? "未找到" : vobj.optString("operatorName"));
+                            }
+                        }
+                        // 文件审核
+                        if (!TextUtils.equals(tempJSONObject.optString("docAudit"), "null")) {
+                            vobjJson = tempJSONObject.getJSONObject("docAudit").getString("baseData");
+                            if(isValid(vobjJson)){
+                                vobj = new JSONObject(vobjJson);
+                                conListData6.add("获证企业单位编号");
+                                conListData6.add(tempJSONObject.optString("unitID"));
+                                conListData6.add("委托人单位名称");
+                                conListData6.add(TextUtils.isEmpty(vobj.optString("unitName")) ? "未找到" : vobj.optString("unitName"));
+                                conListData6.add("交易平台名称");
+                                conListData6.add(TextUtils.isEmpty(vobj.optString("platformName")) ? "未找到" : vobj.optString("platformName"));
+                                conListData6.add("交易平台版本");
+                                conListData6.add(TextUtils.isEmpty(vobj.optString("edition")) ? "未找到" : vobj.optString("edition"));
+                                conListData6.add("认证机构编号");
+                                conListData6.add(TextUtils.isEmpty(vobj.optString("certificationUnitID")) ? "未找到" : vobj.optString("certificationID"));
+                                conListData6.add("认证机构名称");
+                                conListData6.add(TextUtils.isEmpty(vobj.optString("certificationUnitName")) ? "未找到" : vobj.optString("certificationName"));
+                                conListData6.add("审核报告结论");
+                                conListData6.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
+                                conListData6.add("审核时间");
+                                conListData6.add(TextUtils.isEmpty(vobj.optString("auditTime")) ? "未找到" : vobj.optString("auditTime"));
+                                conListData6.add("审核人证件号码");
+                                conListData6.add(TextUtils.isEmpty(vobj.optString("auditorID")) ? "未找到" : vobj.optString("auditorID"));
+                                conListData6.add("审核人姓名");
+                                conListData6.add(TextUtils.isEmpty(vobj.optString("auditorName")) ? "未找到" : vobj.optString("auditorName"));
+                                conListData6.add("数据上传人证件号码");
+                                conListData6.add(TextUtils.isEmpty(vobj.optString("postPersonID")) ? "未找到" : vobj.optString("postPersonID"));
+                                conListData6.add("数据上传人证件姓名");
+                                conListData6.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
+                            }
+                        }
+                        // 现场审核
+                        if (!TextUtils.equals(tempJSONObject.optString("onsiteAudit"), "null")) {
+                            vobjJson = tempJSONObject.getJSONObject("onsiteAudit").getString("baseData");
+                            if(isValid(vobjJson)){
+                                vobj = new JSONObject(vobjJson);
+                                conListData7.add("获证企业单位编号");
+                                conListData7.add(tempJSONObject.optString("unitID"));
+                                conListData7.add("委托人单位名称");
+                                conListData7.add(TextUtils.isEmpty(vobj.optString("unitName")) ? "未找到" : vobj.optString("unitName"));
+                                conListData7.add("交易平台名称");
+                                conListData7.add(TextUtils.isEmpty(vobj.optString("platformName")) ? "未找到" : vobj.optString("platformName"));
+                                conListData7.add("交易平台版本");
+                                conListData7.add(TextUtils.isEmpty(vobj.optString("edition")) ? "未找到" : vobj.optString("edition"));
+                                conListData7.add("认证机构编号");
+                                conListData7.add(TextUtils.isEmpty(vobj.optString("certificationUnitID")) ? "未找到" : vobj.optString("certificationID"));
+                                conListData7.add("认证机构名称");
+                                conListData7.add(TextUtils.isEmpty(vobj.optString("certificationUnitName")) ? "未找到" : vobj.optString("certificationName"));
+                                conListData7.add("审核报告结论");
+                                conListData7.add(TextUtils.isEmpty(vobj.optString("conclusion")) ? "未找到" : vobj.optString("conclusion"));
+                                conListData7.add("审核时间");
+                                conListData7.add(TextUtils.isEmpty(vobj.optString("auditTime")) ? "未找到" : vobj.optString("auditTime"));
+                                conListData7.add("审核人证件号码");
+                                conListData7.add(TextUtils.isEmpty(vobj.optString("auditorID")) ? "未找到" : vobj.optString("auditorID"));
+                                conListData7.add("审核人姓名");
+                                conListData7.add(TextUtils.isEmpty(vobj.optString("auditorName")) ? "未找到" : vobj.optString("auditorName"));
+                                conListData7.add("数据上传人证件号码");
+                                conListData7.add(TextUtils.isEmpty(vobj.optString("postPersonID")) ? "未找到" : vobj.optString("postPersonID"));
+                                conListData7.add("数据上传人证件姓名");
+                                conListData7.add(TextUtils.isEmpty(vobj.optString("postPersonName")) ? "未找到" : vobj.optString("postPersonName"));
+                            }
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -533,10 +673,16 @@ public class QueryCertificate extends BaseActivity {
                     conQueryListAdapter.notifyDataSetChanged();
                     conQueryListAdapter3.notifyDataSetChanged();
                     conQueryListAdapter4.notifyDataSetChanged();
+                    conQueryListAdapter5.notifyDataSetChanged();
+                    conQueryListAdapter6.notifyDataSetChanged();
+                    conQueryListAdapter7.notifyDataSetChanged();
 
                     query_certificate_text2.setVisibility(View.VISIBLE);
                     query_certificate_grid2.setVisibility(View.VISIBLE);
                     query_certificate_text3.setVisibility(View.VISIBLE);
+                    query_certificate_text5.setVisibility(View.VISIBLE);
+                    query_certificate_grid5.setVisibility(View.VISIBLE);
+                    query_certificate_text7.setVisibility(View.VISIBLE);
                 }
             } else if (TextUtils.equals(s, "500")) {
                 UiUtils.show(msg);

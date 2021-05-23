@@ -62,6 +62,8 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int pos, long id) {
+                TextView tv = (TextView)view;
+                tv.setTextSize(20);
                 if (pos == 0) {
                     usertypeStr = "1";
                 } else {

@@ -59,9 +59,10 @@ public class HomeCarouselAdapter extends PagerAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.viewpager_image);
         Glide.with(context).load(picDatas.get(position).getImageView()).into(imageView);
         TextView textViewTitle = (TextView) view.findViewById(R.id.viewpager_title);
-        textViewTitle.setTextSize(20);
+        textViewTitle.setTextSize(25);
         textViewTitle.setText(picDatas.get(position).getTitle());
         TextView textViewCount = (TextView) view.findViewById(R.id.viewpager_count);
+        textViewCount.setTextSize(25);
         if (position % 3 == 2) {
             textViewCount.setText("我们共为您找到了： 7个区块链节点");
         }else {
