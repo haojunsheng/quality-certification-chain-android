@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:text="质量认证区块链平台"
             android:textColor="#fff"
-            android:textSize="20sp" />
+            android:textSize="@dimen/normal_size" />
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout

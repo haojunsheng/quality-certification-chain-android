@@ -17,7 +17,7 @@
             android:layout_gravity="center"
             android:text="@string/toolbar_advices"
             android:textColor="#fff"
-            android:textSize="20sp" />
+            android:textSize="@dimen/normal_size" />
     </android.support.v7.widget.Toolbar>
     <EditText
         android:id="@+id/edit_advice"

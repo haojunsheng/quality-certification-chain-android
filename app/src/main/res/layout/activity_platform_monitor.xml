@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:text="平台监控"
             android:textColor="#fff"
-            android:textSize="20sp" />
+            android:textSize="@dimen/normal_size" />
     </android.support.v7.widget.Toolbar>
 
     <ScrollView
@@ -60,7 +60,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/normal_size"
                         android:text="高度: " />
 
                     <TextView
@@ -69,7 +69,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/normal_size"
                         android:text="0" />
                 </LinearLayout>
 
@@ -85,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/normal_size"
                         android:gravity="center"
                         android:text="当前hash值: " />
 
@@ -94,7 +94,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/normal_size"
 
                         android:gravity="center"
                         android:text="0" />
@@ -112,7 +112,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/normal_size"
                         android:gravity="center"
                         android:text="当前hash值长度: " />
 
@@ -121,7 +121,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/normal_size"
                         android:gravity="center"
                         android:text="0" />
                 </LinearLayout>
@@ -139,7 +139,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/normal_size"
                         android:text="先前hash值: " />
 
                     <TextView
@@ -147,7 +147,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/normal_size"
                         android:gravity="center"
                         android:text="0" />
                 </LinearLayout>
@@ -165,7 +165,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/normal_size"
                         android:text="先前hash值长度: " />
 
                     <TextView
@@ -174,7 +174,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/normal_size"
                         android:text="0" />
                 </LinearLayout>
                 <View
@@ -199,7 +199,7 @@
                     android:gravity="center"
                     android:hint="区块id"
                     android:textColorHint="#B7B7B7"
-                    android:textSize="25dp" />
+                    android:textSize="@dimen/normal_size" />
 
                 <Button
                     android:id="@+id/blockIDBtn"
@@ -210,7 +210,7 @@
                     android:layout_marginRight="20dp"
                     android:background="@drawable/buttonshape"
                     android:text="查询"
-                    android:textSize="25dp"
+                    android:textSize="@dimen/normal_size"
                     android:textColor="#FFFFFF" />
 
                 <LinearLayout
@@ -226,7 +226,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/normal_size"
                         android:text="数目: " />
 
                     <TextView
@@ -236,7 +236,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="0"
-                        android:textSize="25dp"/>
+                        android:textSize="@dimen/normal_size"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -253,7 +253,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="数据hash: "
-                        android:textSize="25dp"/>
+                        android:textSize="@dimen/normal_size"/>
 
                     <TextView
                         android:id="@+id/block_monitor_hash"
@@ -262,7 +262,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="0"
-                        android:textSize="25dp"/>
+                        android:textSize="@dimen/normal_size"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -279,7 +279,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="数据hash长度: "
-                        android:textSize="25dp"/>
+                        android:textSize="@dimen/normal_size"/>
 
                     <TextView
                         android:id="@+id/block_monitor_hash_len"
@@ -288,7 +288,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="0"
-                        android:textSize="25dp"/>
+                        android:textSize="@dimen/normal_size"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -305,7 +305,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="先前hash: "
-                        android:textSize="25dp"/>
+                        android:textSize="@dimen/normal_size"/>
 
                     <TextView
                         android:id="@+id/block_monitor_pre_hash"
@@ -314,7 +314,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="0"
-                        android:textSize="25dp"/>
+                        android:textSize="@dimen/normal_size"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -332,7 +332,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="交易信息: "
-                        android:textSize="25dp"/>
+                        android:textSize="@dimen/normal_size"/>
 
                     <TextView
                         android:id="@+id/block_monitor_tran"
@@ -340,7 +340,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="25dp"/>
+                        android:textSize="@dimen/normal_size"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
